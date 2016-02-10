@@ -1,0 +1,397 @@
+﻿@using Kendo.Mvc.UI
+@using HomesteadViewer.ViewModels.Administration
+@using HomesteadViewer.SiteUtilities
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+ 
+    int counter = 1;
+}
+<br />
+<div class="container">
+    Filters
+    <hr />
+    @(Html.Kendo().Button()
+        .Name("clear-filters")
+        .Content("<i class='fa fa-minus'></i> Clear Filters")
+        .HtmlAttributes(new
+        {
+            style = "float:right"
+        })
+    )
+    @(Html.Kendo().Button()
+        .Name("add_filter")
+        .Content("<i class='fa fa-plus'></i> Add Filter")
+        .HtmlAttributes(new
+        {
+            style = "float:right"
+        })
+        .Events(e => e.Click("showFilterOptions"))
+    )
+
+    @(Html.Kendo().DropDownList()
+        .Name("filter_types")
+        .OptionLabel("- Filter On -")
+        .BindTo(HomesteadViewer.Helpers.DropdownListData.Filters())
+        .Events(e => e.Change("displayFilter"))
+    )
+    @(Html.Kendo().DropDownList()
+        .Name("exemption_types")
+        .OptionLabel("- Exemption Types -")
+        .BindTo(HomesteadViewer.Helpers.DropdownListData.ExemptionTypes())
+    )
+    @(Html.Kendo().Button()
+        .Name("exemption_types_filter_close_bttn")
+        .Content("<i class='fa fa-times'></i>")
+            //.Events(e => e.Click("showFilterOptions"))
+    )
+    @(Html.Kendo().DropDownList()
+        .Name("user_filter")
+        .OptionLabel("- Select A User -")
+        .BindTo(HomesteadViewer.Helpers.DropdownListData.Users())
+    )
+    @(Html.Kendo().Button()
+        .Name("user_filter_close_bttn")
+        .Content("<i class='fa fa-times'></i>")
+            //.Events(e => e.Click("showFilterOptions"))
+    )
+    @*@(Html.Kendo().DropDownList()
+            .Name("exemption_type_filter2")
+            .OptionLabel("- Exemption Type -")
+            .BindTo(new string[] { "AF", "CDV", "CDVS", "DP", "DV", "DVX", "DVXS", "DVXS2", "HS", "OA", "OAS", "TCTC" })
+            .Events(e => e.Change("exemptionFilter"))
+        )*@
+    <br /><br />
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="heading glyphicons beer"><i></i>@ViewBag.Title</h4>
+        </div>
+        <div class="panel-body">
+            @(Html.Kendo().Grid<HomesteadViewer.ViewModels.Exemption>()
+        .Name("exemption-grid")
+        .HtmlAttributes(new { @class = "table-responsive" })
+        .Columns(columns =>
+        {
+            columns.Command(command => command.Custom("View").Click("showDetails")).Width(75);
+            foreach (var gc in HomesteadViewer.Models.GridColumn_DTO.GetAllDisplayedColumns())
+            {
+                switch (gc.PropertyName)
+                {
+                    case "Status":
+                        var statusFK = columns.ForeignKey(p =>
+                                    p.Status,
+                                    HomesteadViewer.Helpers.DropdownListData.Status())
+                                    .Title(gc.DisplayName)
+                                    .Width((gc.Width != null) ? gc.Width.ToString() : null);
+                        
+                        statusFK.ClientTemplate(
+                            "# if (Status == 0) { #" +
+                                "<div class='label-green' style='color:white; padding:5px; text-align:center;'>Approved</div>" +
+                            "# } else  if (Status == 1){ #" +
+                                "<div class='label-primary' style='color:white; padding:5px;  text-align:center;'>Pending</div>" +
+                            "# } else { #" +
+                                "<div class='label-default' style='color:white;padding:5px;  text-align:center;'>Not Worked</div>" +
+                            "# } #"
+                        );
+                        break;
+                    case "AssignedUser":
+                        var usersFK = columns.ForeignKey(p =>
+                                    p.AssignedUserID,
+                                    HomesteadViewer.Helpers.DropdownListData.Users())
+                                    .Title(gc.DisplayName)
+                                    .Width((gc.Width != null) ? gc.Width.ToString() : null);
+                        usersFK.ClientTemplate(
+                                "# if (!AssignedUserID || AssignedUserID <= 0) { #" +
+                                    "<div class='label-inverse' style='color:white; padding:5px; padding-left:12px;'>- Unassigned -</div>" +
+                                "# } else { #" +
+                                    "<div class='label-info' style='color:white; padding:5px; padding-left:12px;'>#:AssignedUser.FullName#</div>" +
+                                "# } #"
+                        );
+                        break;
+
+                    case "ExemptionTypes":
+                        var exemptionTypCB = columns.Bound(gc.PropertyName)
+                            .Title(gc.DisplayName);
+                        if (gc.Width != null)
+                            exemptionTypCB.Width((int)gc.Width);
+                        exemptionTypCB.ClientTemplate(
+                            "#$.each(ExemptionTypes, function(i, obj){ # " +
+                            "<p>#:obj#</p>" +
+                            "# }) #"
+
+                        );
+                        break;
+                    default:
+                        var cb = columns.Bound(gc.PropertyName)
+                                    .Title(gc.DisplayName);
+                        if (gc.Width != null)
+                            cb.Width((int)gc.Width);
+                        var gsvm = new GridSettingsViewModel();
+
+                        var propType = gsvm.GetType().GetProperty(gc.PropertyName).PropertyType;
+                        if (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        {
+                            propType = propType.GetGenericArguments()[0];
+                        }
+                        if (propType == typeof(int) || propType == typeof(int?))
+                        {
+                            cb.Filterable(f => f.UI("intFilter"));
+                        }
+                        if (propType == typeof(DateTime?) || propType == typeof(DateTime))
+                        {
+                            cb.Format("{0:MM/dd/yyyy}");
+                        }
+                        if (gc.PropertyName == "Modified")
+                            cb.Format("{0:MM/dd/yyyy h:mm:ss tt}");
+                        break;
+                }
+            }
+        })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Events(events => events.Change("change"))
+            .Model(model =>
+            {
+                model.Id(p => p.OnlineExemptionID);
+                model.Field(p => p.OnlineExemptionID).DefaultValue(16000000);
+                
+
+                foreach (var gc in HomesteadViewer.Models.GridColumn_DTO.GetAllDisplayedColumns())
+                {
+                    var gsvm = new GridSettingsViewModel();
+
+                    var propType = gsvm.GetType().GetProperty(gc.PropertyName).PropertyType;
+                    if (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        propType = propType.GetGenericArguments()[0];
+                    }
+
+                    switch (gc.PropertyName)
+                    {
+                        case "AssignedUser":
+                            model.Field(f => f.AssignedUserID).Editable(gc.Editable).DefaultValue(0);
+                            break;
+                        default:
+                            model.Field(gc.PropertyName, propType).Editable(gc.Editable);
+                            break;
+                    }                    
+                }
+            })
+            .Read(read => read.Action("Exemption_List", "Exemptions", new { modifier = ViewBag.Filter }))
+            .PageSize(20)
+            .Update(update => update.Action("AddOrUpdateExemption", "Exemptions"))
+            .Sort(x => x.Add(d => d.Created).Descending())
+            .Model(x => x.Id("QuickrefID"))
+        )
+        .Selectable(selectable => selectable.Mode(GridSelectionMode.Multiple))
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Sortable()
+                .Pageable(p => p.PageSizes(new int[] { 10, 20, 50, 100 }))
+        .Filterable()
+        .ToolBar(toolbar =>
+            {
+                toolbar.Template(@<text>
+                    @(Html.Kendo().Button()
+                            .Name("clear-search")
+                            .Content("Clear Search")
+                            .HtmlAttributes(new
+                                {
+                                    style = "float:right"
+                                })
+                    )
+
+                    @(Html.Kendo().Button()
+                        .Name("edit-selected")
+                        .Content("<i class='fa fa-edit'></i> Edit Selected")
+                    )
+                    @(Html.Kendo().TextBox()
+                                .Name("searchbox")
+                        .HtmlAttributes(new
+                        {
+                            placeholder = "Search...",
+                            @class = "search-query",
+                            style = "width:200px; float:right"
+                        })
+                    )
+                </text>);
+            })
+            )
+
+        </div>
+    </div>
+</div>
+
+@Html.Partial("EditorTemplates/Viewer")
+@Html.Partial("EditorTemplates/BatchEdit")
+
+<script type="text/javascript">
+
+    function intFilter(e) {
+        e.kendoNumericTextBox({
+            apinners: false,
+            format: "#",
+            decimals: 0
+        });
+    }
+    function showFilterOptions(e) {
+        e.preventDefault();
+        //    $("#filter_types").data("kendoDropDownList").wrapper.show();
+    }
+    function displayFilter(e) {
+        switch ($("#filter_types").data("kendoDropDownList").value()) {
+            case "ExemptionType":
+                $("#exemption_types").data("kendoDropDownList").wrapper.show();
+                $("#exemption_types_filter_close_bttn").show();
+                break;
+            case "AssignedUser":
+                $("#user_filter").data("kendoDropDownList").wrapper.show();
+                $("#user_filter_close_bttn").show();
+            default:
+        }
+        e.preventDefault();
+    }
+
+    function exemptionFilter(e) {
+        var value = this.value();
+        if (value) {
+            $("#exemption-grid").data("kendoGrid")
+                .dataSource.filter({
+                    field: "ExemptionTypes",
+                    operator: function (item, v) {
+                        var found = true;
+                        $.each(item, function (i, obj) {
+                            if (obj.toLowerCase() == v.toLowerCase()) {
+                                found = true;
+                                return false;
+                            }
+                        });
+                        return found;
+                    }
+                });
+        } else {
+            $("#exemption-grid").data("kendoGrid").dataSource.filter({});
+        }
+    }
+
+    function change(e) {
+        if (e.action != "itemchange") {
+            return false;
+        }
+        $.each(e.items, function (i, obj) {
+            data = {
+                QuickrefID: obj.QuickrefID,
+                AssignedUserID: (!$("#AssignedUser").data("kendoDropDownList")) ? obj.AssignedUserID : $("#AssignedUser").data("kendoDropDownList").value(),
+                Status: (!$("#Status").data("kendoDropDownList")) ? obj.Status : $("#Status").data("kendoDropDownList").value(),
+                OnlineExemptionID: obj.OnlineExemptionID,
+                Comment: obj.Comment,
+                FollowUpDate: obj.FollowUpDate
+            };
+            updateDTO(data, "@Url.Action("AddOrUpdateExemption", "Exemptions")", true);
+        });
+    }
+
+    function search(val) {
+
+        var filters = [];
+        @foreach (var gc in HomesteadViewer.Models.GridColumn_DTO.GetAll())
+        {
+            var gsvm = new GridSettingsViewModel();
+            var propType = gsvm.GetType().GetProperty(gc.PropertyName).PropertyType;
+
+            if (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                propType = propType.GetGenericArguments()[0];
+            }
+            if (propType.ToString() == "System.String")
+            {
+                <text>
+        filters.push({ field: "@gc.PropertyName", operator: 'contains', value: val });
+        </text>
+            }
+            if (gc.PropertyName == "AssignedUser")
+            {
+                <text>
+        filters.push({ field: "@gc.PropertyName" + ".FullName", operator: 'contains', value: val });
+
+        if ("unassigned" == val.toLowerCase())
+            filters.push({ field: "@gc.PropertyName" + ".FullName", operator: 'eq', value: "" });
+        </text>
+            }
+            if (gc.PropertyName == "Status")
+            {
+                <text>
+        if ("approved".indexOf(val.toLowerCase()) > -1)
+            filters.push({ field: "@gc.PropertyName", operator: 'eq', value: 0 });
+        if ("pending".indexOf(val.toLowerCase()) > -1)
+            filters.push({ field: "@gc.PropertyName", operator: 'eq', value: 1 });
+        if ("not worked".indexOf(val.toLowerCase()) > -1)
+            filters.push({ field: "@gc.PropertyName", operator: 'eq', value: 2 });
+        if ("notworked".indexOf(val.toLowerCase()) > -1)
+            filters.push({ field: "@gc.PropertyName", operator: 'eq', value: 2 });
+        </text>
+            }
+        }
+
+
+        @{foreach (var exemptionType in HomesteadViewer.Helpers.DropdownListData.ExemptionTypes())
+        {
+            <text>
+        if (val.toUpperCase() == '@exemptionType.Text')
+            filters.push({ field: '@exemptionType.Text', operator: 'eq', value: true });
+        </text>
+        }}
+
+
+
+        $("#exemption-grid").data("kendoGrid").dataSource.filter({
+            logic: "or",
+            filters: filters
+        });
+    }
+    $(document).ready(function () {
+        $("#filter_types").data("kendoDropDownList").wrapper.hide();
+        $("#exemption_types").data("kendoDropDownList").wrapper.hide();
+        $("#user_filter").data("kendoDropDownList").wrapper.hide();
+        $("#user_filter_close_bttn").hide();
+        $("#exemption_types_filter_close_bttn").hide();
+        
+        $("#edit-selected").click(function (e) {
+            e.preventDefault();
+
+            var selectedRows = [];
+
+            var grid = $('#exemption-grid').data('kendoGrid');
+            var id;
+
+            grid.select().each(function () {
+                var dataItem = grid.dataItem($(this));
+                selectedRows.push(dataItem);
+            });
+
+            showBatchEditTemplate(selectedRows);
+        });
+
+        $("#clear-search").click(function (e) {
+            e.preventDefault();
+            $("#searchbox").val("");
+            search("");
+        });
+        //change event
+        $("#searchbox").keyup(function () {
+            var val = $('#searchbox').val();
+            if (val.length <= 1)
+                return;
+            search(val);
+
+        });
+    });
+
+
+
+</script>

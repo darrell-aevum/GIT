@@ -1,0 +1,527 @@
+﻿@using Kendo.Mvc.UI
+@model HomesteadViewer.ViewModels.Exemption
+
+@( Html.Kendo().Window().Name("Details")
+        .Title("Final HS Table")
+        .Visible(false)
+        .Modal(true)
+        .Draggable(true)
+
+        .Draggable(true)
+        .Resizable()
+)
+<style>
+    /* Flush Grid */
+    .row.flush-grid img {
+        width: 100%;
+        height: auto;
+        float: left;
+    }
+
+    .row.flush-grid {
+        margin-left: 0;
+        margin-right: 0;
+        padding-bottom: 5px;
+    }
+
+        .row.flush-grid [class*="col-"] {
+            padding: 0;
+        }
+
+            .row.flush-grid [class*="col-"].row {
+                padding: 0;
+                margin: 0;
+            }
+
+    .k-textbox {
+        width: 90%;
+    }
+
+        .k-textbox.k-space-left {
+            padding-left: .5em;
+        }
+
+    .viewTable {
+        width: 100%;
+    }
+
+        .viewTable tr td {
+            padding: 5px;
+        }
+
+        .viewTable tr th {
+            padding: 5px;
+        }
+
+    .k-window-titlebar {
+        background-color: #2c3e50;
+        border-color: #2c3e50;
+        color: #ffffff;
+        font-size: 18px;
+        height: 40px;
+        line-height: 2em;
+    }
+
+    .form-control {
+        width: 90%;
+        height: 12px;
+    }
+
+    .k-window-actions .k-window-action .k-i-close {
+        background-color: white;
+    }
+</style>
+
+<script type="text/x-kendo-template" id="template">
+
+    <table style="width:100%" class="viewTable">
+        <tr>
+            <td style="width:33%" valign="top">
+                <table style="width:100%">
+                    <tr>
+                        <th style="width:1%; white-space:nowrap">QuickRefId</th>
+                        <td>
+                            <input disabled type="text" class="form-control"   value='#:QuickrefID || ""#'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:1%; white-space:nowrap">Situs</th>
+                        <td>
+                            <input disabled type="text" class="form-control"   value='#:Situs || ""#'>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width:33%" valign="top">
+                <table style="width:100%">
+                    <tr>
+                        <th style="width:1%; white-space:nowrap">Legal</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input disabled type="text" class="form-control"   value='#:Legal || ""#'>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width:33%" valign="top">
+                <table style="width:100%">
+                    <tr>
+                        <th style="width:1%; white-space:nowrap">MailingAddress_Orion</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input disabled type="text" class="form-control"   value='#:MailingAddress_Orion || ""#'>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <hr />
+    <table style="width:100%" class="viewTable">
+        <tr>
+            <td style="width:33%" valign="top">
+                <div class="panel panel-inverse" style="height:inherit">
+                    <div class="panel-heading">Transfer Info/Active EX</div>
+                    <div class="panel-body" style="height:inherit">
+                        <table>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Party Name</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:PartyName_Orion || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Owner Name</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:Ownership_Orion || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Seller Name</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:SellerName || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Deed Date</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:formatDateString(DeedDate) || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Active Ex</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:ActiveEx || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap"> HS EFF Date</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:ExEffectiveDate || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">&nbsp;</th>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">&nbsp;</th>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td style="width:33%" valign="top">
+                <div class="panel panel-inverse" style="height:inherit">
+                    <div class="panel-heading">Application Info</div>
+                    <div class="panel-body" style="height:inherit">
+                        <table>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Esignature</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:Esignature || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Ex Requested?</th>
+                                <td>
+                                    <input disabled type="text" class="form-control" value='#:
+                                        (AF) ? "YES" :
+                                        (CERTFORPART) ? "YES" :
+                                        (CDV) ? "YES" :
+                                        (CDVS) ? "YES" :
+                                        (DP) ? "YES" :
+                                        (DV) ? "YES" :
+                                        (DVX) ? "YES" :
+                                        (DVXS) ? "YES" :
+                                        (DVXS2) ? "YES" :
+                                        (EXEMPT521) ? "YES" :
+                                        (HS) ? "YES" :
+                                        (OA) ? "YES" :
+                                        (OAS) ? "YES" :
+                                        (TCTC) ? "YES" : "NO" #' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Application Date</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:formatDateString(TimeStampCreate) || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Tax Year</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:ExYearRequested || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Date First Occupied</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:formatDateString(DateFirstOccupied) || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap"> HS EFF Date</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:ExEffectiveDate || ""#'>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <table width="100%">
+                            <tr>                                
+                                <th width="1%" style="white-space: nowrap; text-align: center; "><span class='#:(AF) ? "btn-inverse"  : ""#' style="padding:3px;"><small>AF</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(CDV) ? "btn-inverse"  : ""#' style="padding:3px;"><small>CDV</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(CDVS) ? "btn-inverse"  : ""#' style="padding:3px;"><small>CDVS</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(CERTFORPART) ? "btn-inverse"  : ""#' style="padding:3px;"><small>CERTFORPART</small></span></th>                                
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(DP) ? "btn-inverse"  : ""#' style="padding:3px;"><small>DP</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(DV) ? "btn-inverse"  : ""#' style="padding:3px;"><small>DV</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(DVX) ? "btn-inverse"  : ""#' style="padding:3px;"><small>DVX</small></span></th>                                
+                            </tr>
+                            <tr>                                
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(DVXS) ? "btn-inverse"  : ""#' style="padding:3px;"><small>DVXS</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(DVXS2) ? "btn-inverse"  : ""#' style="padding:3px;"><small>DVXS2</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(EXEMPT521) ? "btn-inverse"  : ""#' style="padding:3px;"><small>EXEMPT521</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(HS) ? "btn-inverse"  : ""#' style="padding:3px;"><small>HS</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(OA) ? "btn-inverse"  : ""#' style="padding:3px;"><small>OA</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(OAS) ? "btn-inverse"  : ""#' style="padding:3px;"><small>OAS</small></span></th>
+                                <th width="1%" style="white-space: nowrap; text-align: center;"><span class='#:(TCTC) ? "btn-inverse"  : ""#' style="padding:3px;"><small>TCTC</small></span></th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td style="width:33%" valign="top">
+                <div class="panel panel-inverse" style="height:inherit">
+                    <div class="panel-heading">Owner Info</div>
+                    <div class="panel-body">
+                        <table>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Date of Birth</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:formatDateString(Birthdate) || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Date of Birth (2)</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:formatDateString(SpouseBirthdate) || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Email</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:Email || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Phone Number</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:Phone || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Drivers License</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:DriverLicense || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">&nbsp;</th>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">&nbsp;</th>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">&nbsp;</th>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table style="width:100%" class="viewTable">
+        <tr>
+            <td style="width:33%" valign="top">
+                <div class="panel panel-inverse" style="height:inherit">
+                    <div class="panel-heading">Appraisal Tab</div>
+                    <div class="panel-body" style="height:inherit">
+                        <table width="100%">
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">HS Improved</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:(HSImproved) ? "YES" : "NO"#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Land HS Eligible</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:(LandHSEligible) ? "YES" : "NO"#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Imp HS Eligible</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:(ImpHSEligible) ? "YES" : "NO"#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">% Complete</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:PercentComplete || ""#'>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td style="width:33%" valign="top">
+                <div class="panel panel-inverse" style="height:inherit">
+                    <div class="panel-heading">Party Mailing Address</div>
+                    <div class="panel-body" style="height:inherit">
+                        <table width="100%">
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Mailing Address</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:ApplicantMailing1 || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">City</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:ApplicantCity || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">State</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:ApplicantState || ""#'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width:1%; white-space:nowrap">Zip</th>
+                                <td>
+                                    <input disabled type="text" class="form-control"   value='#:ApplicantZip || ""#'>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td style="width:33%" valign="top" rowspan="2">
+                <div class="panel panel-inverse" style="height:inherit">
+                    <div class="panel-heading">Administration</div>
+                    <div class="panel-body">
+                        <table width="100%">
+                            <tr>
+                                <th>Assigned To</th>
+                                <td>
+                                    <div class="input-group" style="width:100%;">
+                                        @(Html.Kendo().DropDownList()
+                                                    .Name("exemption_assignedTo") 
+                                                    .BindTo(HomesteadViewer.Helpers.DropdownListData.Users())                                                    
+                                                    .Value("#:AssignedUserID || 0#")
+                                                    .ToClientTemplate()// A list of all employees which is populated in the controller                                                   
+                                        )
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td>
+                                    <div class="input-group" id="statusColumn" style="width:100%;">
+                                        @(Html.Kendo().DropDownList()
+                                            .Name("exemption_status")                                            
+                                            .BindTo(HomesteadViewer.Helpers.DropdownListData.Status())
+                                         //   .Value("#:(Status ==0) ? 'Approved' : (Status == 1) ? 'Pending' : 'NotWorked'#")
+                                            .ToClientTemplate()                                                                                                            
+                                        )
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Comment</th>
+                                <td>
+                                    <textarea class="k-textbox k-space-left" rows="4" style="width:100%" id="exemption_comment">#:Comment || ""#</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Follow Up Date</th>
+                                <td>
+                                    <div class="demo-section k-content">
+                                        <input id="exemption_followUpDate" value="#:formatDateString(FollowUpDate) || ''#" style="width: 100%" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel-footer" style="text-align:right">
+                        <button class="btn-midnightblue" onclick='update()'>Update</button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">Associated Documents for #:QuickrefID || ""# </div>
+                    <div class="panel-body">
+                        <div class="row flush-grid" id="fileData"> 
+                        </div>
+                    </div>
+                    <div class="panel-footer" style="text-align:right">
+                        <div class="row  flush-grid">
+                            <div class="col-sm-12">
+                                <a href="https://chrome.google.com/webstore/detail/locallinks/jllpkdkcdjndhggodimiphkghogcpida">Chrome Extension</a>
+                                &nbsp;|&nbsp;
+                                <a href="https://addons.mozilla.org/en-US/firefox/addon/locallink/">FireFox Extension</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div style="display:none" id="OnlineExemptionID">#:OnlineExemptionID || ""#</div>
+    <div style="display:none" id="QuickrefID">#:QuickrefID || ""#</div>
+</script>
+
+<script type="text/javascript">
+
+
+
+
+    function update() { 
+        data = {
+            AssignedUserID: $("#exemption_assignedTo").data("kendoDropDownList").value(),
+            Status: $("#exemption_status").data("kendoDropDownList").value(),
+            OnlineExemptionID: $("#OnlineExemptionID").text(),
+            QuickrefID: $("#QuickrefID").text(),
+            Comment: $("#exemption_comment").val(),
+            FollowUpDate: $("#exemption_followUpDate").val()
+        };
+        updateDTO(data, "@Url.Action("AddOrUpdateExemption", "Exemptions")", true);
+    }
+
+    var detailsTemplate = kendo.template($("#template").html());
+
+    function showDetails(e) {
+
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var wnd = $("#Details").data("kendoWindow");  
+        wnd.content(detailsTemplate(dataItem));
+        wnd.center().open();
+ 
+        console.dir(dataItem.AssignedUserID);
+        var status = $("#exemption_status").data("kendoDropDownList");        
+        switch (dataItem.Status) {
+            case 0:
+                status.value("");
+                status.value("0");
+                break;
+            case 1:
+                status.value("");
+                status.value("1");
+                break;
+            default:
+                status.value("");
+                status.value("2");
+        }
+
+        $("#exemption_followUpDate").kendoDatePicker();
+
+        var fileData;
+
+
+        var request = $.ajax({
+            url: "@Url.Action("Get_Associate_File_URLs", "Exemptions")",
+            method: "POST",
+            data: { id: dataItem.QuickrefID },
+            dataType: "json"
+        });
+
+        request.done(function (data) {
+            $("#fileData").html("");
+            for (var name in data) {
+                var url = data[name];
+                $("#fileData").append('<div class="col-sm-6"><a href="' + url + '" target="_blank">' + name + '</a></div>');
+            }
+        });
+
+        request.fail(function (jqXHR, textStatus) {
+            console.log("Request failed: " + textStatus);
+        });
+
+
+    }
+</script>

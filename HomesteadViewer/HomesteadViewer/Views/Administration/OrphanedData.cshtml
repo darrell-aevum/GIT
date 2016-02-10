@@ -1,0 +1,46 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Orphaned Data";
+} 
+ 
+<div class="panel panel-primary">
+    <div class="container">
+        <div class="panel panel-primary">
+                <div class="panel-body">
+                @(Html.Kendo().Grid<HomesteadViewer.Models.AdministrativeProperties_DTO>()
+                    .Name("errorLogs-grid")
+                    .HtmlAttributes(new { @class = "table-responsive" })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.OnlineExemptionID);
+                        columns.Bound(p => p.QuickrefID);
+                        columns.Bound(p => p.Modified).Format("{0:MM/dd/yyyy h:mm:ss tt}");
+                        columns.Bound(p => p.ModifiedBy);
+                        columns.Bound(p => p.Status);  
+                        columns.Bound(p => p.Comment);                                                
+                    })
+                    .DataSource(dataSource => dataSource
+                        .Ajax() 
+                        .Model(model =>
+                        {
+                            model.Id(p => p.ID);
+                        })
+                        .Read(read => read.Action("OrphanedData_Read", "Administration"))                       
+                    )
+                    .Sortable()
+                    .Filterable()
+                    .Pageable(p => p.PageSizes(new int[] { 10, 20, 50, 100 })) 
+)
+                </div>
+        </div>
+    </div>
+</div>
+ 

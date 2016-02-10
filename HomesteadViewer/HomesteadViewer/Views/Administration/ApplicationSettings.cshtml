@@ -1,0 +1,138 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Application Settings";
+}
+ @model HomesteadViewer.ViewModels.Administration.ApplicationSettingsViewModel
+   
+        <div class="panel panel-primary"> 
+            @*<a href="/"><img src="/content/img/logo-big.png" alt="Logo" class="brand" width="100%" /></a>*@
+            @using (Html.BeginForm("SaveApplicationSettings", "Administration", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                <div class="panel-body">    
+                    <div class="form-horizontal" style="margin-bottom: 0px !important;">
+ 
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.SiteTitle)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.SiteTitle, new { @class = "form-control", placeholder = "Site Title" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label"></label>
+                            <div class="col-sm-6">
+                                <hr />
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.FullyQualifiedDomainName)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.FullyQualifiedDomainName, new { @class = "form-control", placeholder = "Fully Qualified Domain Name" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.DataSource)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.DataSource, new { @class = "form-control", placeholder = "Data Source" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.Catalog)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.Catalog, new { @class = "form-control", placeholder = "Catalog" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label"></label>
+                            <div class="col-sm-6">
+                               <hr/>
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.FileRepositoryPath)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.FileRepositoryPath, new { @class = "form-control", placeholder = "File Repository Path" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.SearchTermTableColumn)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.SearchTermTableColumn, new { @class = "form-control", placeholder = "Search Term Table Column" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label"></label>
+                            <div class="col-sm-6">
+                                <hr />
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.AnyoneCanRegister)</label>
+                            <div class="col-sm-6">                      
+                                <div class="checkbox block"><label>@Html.CheckBoxFor(x => x.AnyoneCanRegister, new { placeholder = "Search Term Table Column" })</label></div> 
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.ApprovalForAccess)</label>
+                            <div class="col-sm-6">
+                                <div class="checkbox block"><label>@Html.CheckBoxFor(x => x.ApprovalForAccess, new { placeholder = "Search Term Table Column" })</label></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.OnlyAdminCanAssign)</label>
+                            <div class="col-sm-6">
+                                <div class="checkbox block"><label>@Html.CheckBoxFor(x => x.OnlyAdminCanAssign, new { placeholder = "Search Term Table Column" })</label></div>
+                            </div>
+                        </div> 
+                    </div>
+                    @if (!String.IsNullOrEmpty(ViewBag.Error))
+                    {
+                        <div style="color: red; float: right;">@ViewBag.Error</div>
+                    }
+                    
+                </div>
+
+                <div class="panel-footer">
+                    <div class="pull-right">
+                        <input type="submit" value="Save and Continue" class="btn btn-primary" />
+                    </div>
+                </div>
+            }
+
+
+        </div>
+ 

@@ -1,0 +1,41 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Settings";
+}
+<div id="page-heading">
+    <h1>Application Settings</h1>
+    <div class="options">
+        <a href="#" onclick="addItem()" class="btn btn-success">Add New Files</a>
+    </div>
+</div>
+<div class="container">
+    @(Html.Kendo().TabStrip()
+        .Name("settings-tabs")
+        .HtmlAttributes(new { @class = "page-tabs" })
+        .Items(t =>
+        {
+            t.Add()
+            .Text("Users")
+            .Selected(true)
+            .LoadContentFrom("Users", "Administration");
+            t.Add()
+            .Text("General Settings")
+            .LoadContentFrom("GeneralSettings", "Administration");
+            t.Add()
+            .Text("Network Settings")            
+            .LoadContentFrom("NetworkSettings", "Administration");
+            t.Add()
+            .Text("File Repository Settings")
+            .LoadContentFrom("FileRepositorySettings", "Administration");
+        })
+    )
+</div>
+<div id="dialog" style="display: none;"></div>

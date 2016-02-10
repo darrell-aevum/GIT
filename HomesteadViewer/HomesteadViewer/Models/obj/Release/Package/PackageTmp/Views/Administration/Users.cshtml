@@ -1,0 +1,25 @@
+﻿@using Kendo.Mvc.UI
+@{
+    <br />
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+        @Html.Partial("EditorTemplates/UserGrid")
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+        <div class="container">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h4 class="heading glyphicons beer"><i></i>Users</h4></div>
+                <div class="panel-body">
+                    @Html.Partial("EditorTemplates/UserGrid")
+                </div>
+            </div>
+        </div>
+    }
+    ViewBag.Title = "Users";
+}
+
+
+

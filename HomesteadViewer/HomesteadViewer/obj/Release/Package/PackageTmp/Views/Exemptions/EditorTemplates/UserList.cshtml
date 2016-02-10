@@ -1,0 +1,14 @@
+﻿@using Kendo.Mvc.UI  
+
+@model HomesteadViewer.Models.User_DTO
+
+@(Html.Kendo().DropDownList()
+    .Name("AssignedUser") 
+    .SelectedIndex(0)
+    .BindTo(HomesteadViewer.Helpers.DropdownListData.Users())
+    .OptionLabel("- Unassigned -")
+    .Value((Model == null) ? "0" : Model.Id.ToString())
+)
+
+
+

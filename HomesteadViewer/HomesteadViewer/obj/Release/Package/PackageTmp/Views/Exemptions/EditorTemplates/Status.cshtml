@@ -1,0 +1,6 @@
+﻿@using Kendo.Mvc.UI  
+@(
+ Html.Kendo().DropDownListFor(model => model)
+        .Name("Status")
+        .BindTo(HomesteadViewer.Helpers.DropdownListData.Status()) 
+)

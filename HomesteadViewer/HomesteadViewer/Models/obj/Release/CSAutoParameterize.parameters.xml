@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="HomesteadViewerContext-Web.config Connection String" description="HomesteadViewerContext Connection String used in web.config by the application to access the database." defaultValue="Data Source=(localdb)\Projects;Initial Catalog=HomesteadViewer;Integrated Security=SSPI;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="H:\\Projects\\HomesteadViewer\\HomesteadViewer\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='HomesteadViewerContext']/@connectionString" />
+  </parameter>
+  <parameter name="ExemptionEntriesContext-Web.config Connection String" description="ExemptionEntriesContext Connection String used in web.config by the application to access the database." defaultValue="Data Source=(localdb)\Projects;Initial Catalog=HomesteadExemptions;Integrated Security=SSPI;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="H:\\Projects\\HomesteadViewer\\HomesteadViewer\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='ExemptionEntriesContext']/@connectionString" />
+  </parameter>
+</parameters>

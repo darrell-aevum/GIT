@@ -1,0 +1,543 @@
+﻿@using Kendo.Mvc.UI
+@model HomesteadViewer.Models.Exemption
+
+@( Html.Kendo().Window().Name("Details")
+        .Title("Final HS Table")
+        .Visible(false)
+        .Modal(true)
+        .Draggable(true)
+   
+        .Draggable(true)
+        .Resizable()
+)
+<style>
+    /* Flush Grid */
+    .row.flush-grid img {
+        width: 100%;
+        height: auto;
+        float: left;
+    }
+
+    .row.flush-grid {
+        margin-left: 0;
+        margin-right: 0;
+        padding-bottom:5px;
+    }
+
+        .row.flush-grid [class*="col-"] {
+            padding: 0;
+        }
+
+            .row.flush-grid [class*="col-"].row {
+                padding: 0;
+                margin: 0;
+            }
+    .k-textbox{
+        width:90%;        
+    }
+        .k-textbox.k-space-left {
+            padding-left: .5em;
+        }
+</style>
+ 
+<script type="text/x-kendo-template" id="template">
+
+    <div class="row flush-grid">
+        <div class="col-sm-12 row">
+            <div class="col-sm-4">         
+                        <div class="row flush-grid">
+                            <div class="col-sm-4">
+                                QuickRefId
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="k-textbox k-space-left" id="quickRefId">
+                                    #:QuickRefID || ""#
+                                </span>                                
+                            </div>
+                        </div>
+                        <div class="row flush-grid">
+                            <div class="col-sm-4">
+                                Situs
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="k-textbox k-space-left" >
+                                    #:SitusAddress || ""#
+                                </span>   
+                            </div>
+                        </div>
+
+                    </div>
+            <div class="col-sm-4">
+                <div class="row flush-grid">
+                    <div class="col-sm-4">
+                        Legal
+                    </div>
+                    <div class="col-sm-8">
+                        <span class="k-textbox k-space-left">
+                            #:LegalDescription || ""#
+                        </span>    
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="row flush-grid">
+                    <div class="col-sm-4">
+                        Orion Mailing<br/>Address
+                    </div>
+ 
+                    <div class="col-sm-8">
+                        <span class="k-textbox k-space-left">
+                            #:MailingAddress || ""#
+                        </span>  
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row flush-grid">
+        <div class="col-sm-12 row">
+            <div class="col-sm-4">
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <div class="row flush-grid">
+                            <div class="col-sm-6">
+                                Party Name
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="k-textbox k-space-left">
+                                    #:PartyName || ""#
+                                </span>   
+                            </div>
+                        </div>
+                        <div class="row flush-grid">
+                            <div class="col-sm-6">
+                                Owner Name
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="k-textbox k-space-left">
+                                    #:OwnerName || ""#
+                                </span>    
+                            </div>
+                        </div>
+                        <div class="row flush-grid">
+                            <div class="col-sm-6">
+                                Seller Name
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="k-textbox k-space-left">
+                                    #:SellerName || ""#
+                                </span> 
+                            </div>
+                        </div>
+                        <div class="row flush-grid">
+                            <div class="col-sm-6">
+                                Deed Date
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="k-textbox k-space-left">
+                                    #:formatDateString(DeedDate)#
+                                </span>  
+                            </div>
+                        </div>
+                        <div class="row flush-grid">
+                            <div class="col-sm-6">
+                                Active Ex
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="k-textbox k-space-left">
+                                  
+                                </span>  
+                            </div>
+                        </div>
+                        <div class="row flush-grid">
+                            <div class="col-sm-6">
+                                HS EFF Date
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="k-textbox k-space-left">
+                                    #:formatDateString(HS_Eff_Date)#
+                                </span>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    ESignature
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:ESignature  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    ExRequested
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:DocumentTypeCode  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Application Date
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:formatDateString(TimestampCreate)#                                        
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Tax Year
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:ExemptionYear  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Date First Occupied
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:formatDateString(DateFirstOccupied)#  
+                                    </span>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Date of Birth
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:formatDateString(Birth_Date)#  
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Date of Birth (2)
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left"> 
+                                        #:formatDateString(SpouseBirthDate)#
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Email
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:OwnerEmail  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Phone Number
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:OwnerPhone  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Drivers License
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:Driver_License  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 row">
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    HS Improved
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left"> 
+                                        #:FirstOfcama_TSGLand_fHomesite  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Land HS Eligible
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:FirstOfcama_TSGImp_fHomesite  || ""#                                        
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Imp HS Eligible
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:FirstOffImproved  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    % Complete
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:fPercentComplete  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Mailing Address
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">                                        
+                                        #:MailingAddress  || ""#
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    City
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:OwnerCity  || ""#
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    State
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:OwnerState  || ""#
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Zip
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:OwnerZip  || ""#
+                                    </span>  
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">                                    
+                                    Comment
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:Comment  || ""# 
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Follow Up Date 
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left"> 
+                                        #:formatDateString(FollowUpDate)#
+                                    </span>  
+                                </div>
+                            </div>
+                            <div class="row flush-grid">
+                                <div class="col-sm-6">
+                                    Status
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="k-textbox k-space-left">
+                                        #:Completed  || ""# 
+                                    </span>  
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    <br />
+    <hr />
+    <div class="row flush-grid">        
+            <div class="col-md-7">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Associated Documents for #:QuickRefID || ""# </div>
+                    <div class="panel-body">
+                        <div class="row flush-grid" id="fileData">
+                            #:QuickRefID || ""#
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="col-md-1"></div>
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Current Status: <span id="currentStatus">#:Status#</span></div>
+                    <div class="panel-body">
+                        <div class="row flush-grid">
+                            <div class="col-sm-6" style="text-align:center;">
+                                <button class="btn-success" onclick="update(0)">Approved</button>
+                            </div>
+                            <div class="col-sm-6" style="text-align:center;">
+                                <button class="btn-midnightblue" onclick="update(1)">Pending</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
+ 
+    <div style="display:none" id="quedExemptionId">#:QuedExemptionId || ""#</div>
+</script>
+
+<script type="text/javascript">
+    function formatDateString(d) {
+        if (Object.prototype.toString.call(d) === "[object Date]") {
+            // it is a date
+            if (isNaN(d.getTime())) {  // d.valueOf() could also work
+                return "";
+            }
+            else {
+                var date = new Date(d);
+                return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+            }
+        }
+        else {
+            return "";
+        }
+
+        (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
+    }
+    var detailsTemplate = kendo.template($("#template").html());
+    function update(status) {
+        var request = $.ajax({
+            url: "@Url.Action("Set_Exemption_Status", "Exemptions")",
+            method: "POST",
+            data: { quedExemptionId: $("#quedExemptionId").text(), exemptionStatus: status },
+            dataType: "json"
+        });
+
+        request.done(function (data) {
+            switch (status) {
+                case 0:
+                    $("#currentStatus").text("Approved");
+                    break;
+                case 1:
+                    $("#currentStatus").text("Pending");
+                    break;
+                default:
+                    $("#currentStatus").text("Not Worked");
+            }
+        });
+
+        request.fail(function (jqXHR, textStatus) {
+            alert("failed");
+        });
+    }
+    function showDetails(e) {
+
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var wnd = $("#Details").data("kendoWindow");
+
+        wnd.content(detailsTemplate(dataItem));
+        wnd.center().open();
+ 
+        var quickRefId = $("#quickRefId").text().trim();
+        var fileData; 
+        switch ($("#currentStatus").text()) {
+            case "0":
+                $("#currentStatus").text("Approved");
+                break;
+            case "1":
+                $("#currentStatus").text("Pending");
+                break;
+            default:
+                $("#currentStatus").text("Not Worked");
+        }
+
+        var request = $.ajax({
+            url: "@Url.Action("Get_Associate_File_URLs", "Exemptions")",
+            method: "POST",
+            data: {id: quickRefId },
+            dataType: "json"
+        });
+
+        request.done(function (data) {
+            $("#fileData").html("");            
+            for (var name in data) {                
+                var url = data[name];                
+                $("#fileData").append('<div class="col-sm-6"><a href="' + url + '" target="_blank">' + name + '</a></div>');
+            }
+            $("#fileData").append('<div class="row"><div class="col-sm-12"><a href="https://chrome.google.com/webstore/detail/locallinks/jllpkdkcdjndhggodimiphkghogcpida">Chrome Extension</a></div></div>')
+        });
+
+        request.fail(function (jqXHR, textStatus) {
+            console.log("Request failed: " + textStatus);
+        });
+ 
+
+    }
+</script>

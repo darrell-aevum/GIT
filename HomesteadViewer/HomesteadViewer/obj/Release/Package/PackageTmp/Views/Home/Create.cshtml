@@ -1,0 +1,29 @@
+﻿@model HomesteadViewer.Models.User
+@{
+    ViewBag.Title = "Create";
+}
+<div class="row inner-container">
+    <div class="headerBar">
+        <div class="col-md-12">
+            @Html.ActionLink("<< back", "Index", new object { }, new { @class = "link-white" })
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="content">
+            Name:
+            <div class="row">@Html.TextBoxFor(model => model.Name, new { @class = "input-transparent-full" })</div>
+            Phone
+            <div class="row">@Html.TextBoxFor(model => model.Phone, new { @class = "input-transparent-full" })</div>
+            Email
+            <div class="row">@Html.TextBoxFor(model => model.Email, new { @class = "input-transparent-full" })</div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-2 text-right"><input type="submit" value="Save & Close" class="btn btn-default" /> </div>
+            <div class="col-md-9"><span class="text-white">(</span>@Html.ActionLink("Cancel", "Index", new object { }, new { @class = "link-brown" })<span class="text-white">)</span></div>
+        </div>
+    }
+</div>

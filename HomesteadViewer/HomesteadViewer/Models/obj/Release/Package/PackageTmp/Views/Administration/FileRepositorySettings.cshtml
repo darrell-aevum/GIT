@@ -1,0 +1,63 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "File REPO";
+}
+<br />
+
+<ul>
+    <li>Repository Path</li>
+    <li>Search by column</li>
+    <li>Site Title</li>
+    <li>Who Can Assign</li>
+</ul>-
+
+<div style="margin: 20px;">
+    
+    <table>
+        <tr><th style="text-align: right;">Repository Path</th><td>@Html.EditorFor(model => model.FirstName)</td></tr>
+        <tr><th style="text-align: right;">Last Name:</th><td>@Html.EditorFor(model => model.LastName)</td></tr>
+        <tr>
+            <th style="text-align: right;">Position Type:</th>
+            <td>
+                @(Html.Kendo().DropDownListFor(model => model.PositionTypeId)
+                                                                        .BindTo(BisAdmin.SiteUtilities.DropDownListData.PositionTypes())
+                                                                        .HtmlAttributes(new { style = "margin-bottom: 10px;" })
+            )
+        </td>
+    </tr>
+    <tr>
+        <th style="text-align: right;">Business:</th>
+        <td>
+            @(Html.Kendo().DropDownListFor(model => model.BusinessId)
+                                                                        .BindTo(BisAdmin.SiteUtilities.DropDownListData.BusinessList())
+                                                                        .OptionLabel("Select Business")
+                                                                        .HtmlAttributes(new { style = "margin-bottom: 10px;" })
+        )
+    </td>
+</tr>
+<tr>
+    <th style="text-align: right;">Tags:</th>
+    <td>
+        @(Html.Kendo().MultiSelect()
+                                                               .Name("selectedTags")
+                                                               .HtmlAttributes(new { style = "width: 161px;" })
+                                                               .DataTextField("TagName")
+                                                               .DataValueField("Id")
+                                                               .BindTo(BisAdmin.SiteUtilities.DropDownListData.CreateTagList("Contact"))
+                                                               .Placeholder("Select tags...")
+                                                               .Value(Model != null ? Model.Tags : new Collection<Tag>())
+    )
+</td>
+</tr>
+</table><br />
+<input type="button" class="btn" value="Cancel" onclick="CloseWindow();" />
+<input type="submit" class="btn" value="Save" />
+</div>

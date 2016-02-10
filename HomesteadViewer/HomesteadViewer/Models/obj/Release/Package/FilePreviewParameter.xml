@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="Homestead Viewer" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\dh\\Documents\\Projects\\HomesteadViewer\\HomesteadViewer\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\dh\\Documents\\Projects\\HomesteadViewer\\HomesteadViewer\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="ExemptionEntriesContext-Web.config Connection String" description="" value="Data Source=DB01;Initial Catalog=HomesteadExemptions;Integrated Security=SSPI" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\dh\\Documents\\Projects\\HomesteadViewer\\HomesteadViewer\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='ExemptionEntriesContext']/@connectionString" />
+  </parameter>
+  <parameter name="HomesteadViewerContext-Web.config Connection String" description="" value="Data Source=DB01;Initial Catalog=HomesteadViewer;Integrated Security=SSPI" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\dh\\Documents\\Projects\\HomesteadViewer\\HomesteadViewer\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='HomesteadViewerContext']/@connectionString" />
+  </parameter>
+</parameters>

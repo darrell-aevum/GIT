@@ -1,0 +1,61 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Error Logs";
+} 
+ 
+<div class="panel panel-primary">
+    <div class="container">
+        <div class="panel panel-primary">
+                <div class="panel-body">
+                @(Html.Kendo().Grid<HomesteadViewer.Models.ErrorLog_DTO>()
+                    .Name("errorLogs-grid")
+                    .HtmlAttributes(new { @class = "table-responsive" })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.UserId).Width(20);
+                        columns.Bound(p => p.TimeStamp).Format("{0:MM/dd/yyyy h:mm:ss tt}");
+                        columns.Bound(p => p.Classname);
+                        columns.Bound(p => p.MethodName);
+                        columns.Bound(p => p.LineNumber); 
+                        columns.Bound(p => p.Message).Width(200);
+                        columns.Bound(p => p.InnerException).Width(200);
+                        columns.Bound(p => p.AdditionalIfno).Width(400);
+                    })
+                    .Groupable()
+                    .DataSource(dataSource => dataSource
+                        .Ajax() 
+                        .Model(model =>
+                        {
+                            model.Id(p => p.Id);                      
+                        })
+                        .Read(read => read.Action("ErrorLogs_Read", "Administration"))
+                                .PageSize(20)                     
+                    )
+                    .Sortable()
+                    .Filterable()
+                    .Pageable()
+                    .ToolBar(toolbar=>{
+                        toolbar.Custom().Text("Clear Logs").HtmlAttributes(new {id="btn_clear_logs"});
+                    })
+)                    
+                </div>
+        </div>
+    </div>
+</div>
+ 
+<script type="text/javascript">
+    $(function () {
+        $("#btn_clear_logs").on("click", function (e) {
+            e.preventDefault();
+            updateDTO(null, "@Url.Action("ClearLogs", "Administration")", true); 
+        })
+    });
+</script>

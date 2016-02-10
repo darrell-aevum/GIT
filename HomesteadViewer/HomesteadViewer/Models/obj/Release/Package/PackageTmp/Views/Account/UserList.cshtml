@@ -1,0 +1,38 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Users";
+}
+<br />
+<div class="container">
+    <div class="panel panel-primary">
+	    <div class="panel-heading"><h4 class="heading glyphicons beer"><i></i>Employees</h4></div>
+        <div class="panel-body">
+            @(Html.Kendo().Grid<HomesteadViewer.Models.User>()
+                  .Name("employees-grid")
+                  .HtmlAttributes(new { @class = "table-responsive employees-row-link" })
+                  .Columns(columns =>
+                  {
+                      columns.Bound(p => p.FirstName).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                      columns.Bound(p => p.LastName).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                      columns.Bound(p => p.Extension).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                      columns.Bound(p => p.MobileNumber).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));                      
+                  })
+                  .DataSource(dataSource => dataSource.Ajax()
+                      .Read(read => read.Action("UserList_Read", "Account"))
+                      .Sort(x => x.Add(d => d.LastName))
+                      .Model(x => x.Id("Id")))
+                  .Events(x => x.DataBound("addExtraStylingToUserGrid").Change("employeeRowSelected"))                          
+                  .Sortable()
+                  .Selectable()
+                  .Filterable(x => x.Mode(GridFilterMode.Row)))
+        </div>
+    </div>
+</div>

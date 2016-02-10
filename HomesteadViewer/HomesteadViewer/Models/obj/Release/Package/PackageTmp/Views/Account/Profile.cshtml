@@ -1,0 +1,146 @@
+﻿@model BisAdmin.Data.Application.User
+
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h4><i class="fa fa-user"></i> Profile For @Model.FullName</h4></div>
+                <div class="panel-body">
+                    <img style="float: left;" src="@Url.RouteUrl(new { controller = "File", action = "AvatarImageFull", id = Model.UserName })" />
+                    <table class="table-form" style="float: left; margin-left: 20px;">
+                        <tr><td colspan="2"><h4 class="heading-arrow">Personal Info</h4></td></tr>
+                        <tr><th>First Name:</th><td>@Model.FirstName</td></tr>
+                        <tr><th>Last Name:</th><td>@Model.LastName</td></tr>
+                        <tr><th>Birthday:</th><td>@(Model.Birthday.HasValue ? Model.Birthday.Value.ToShortDateString() : String.Empty)</td></tr>
+                        <tr><th>Mobile Number:</th><td>@Model.MobileNumber</td></tr>
+                        <tr><th style="vertical-align: top;">Address:</th><td>@Model.Address<br />@Model.City, @Model.State @Model.Zip</td></tr>
+                        <tr><td colspan="2"><br /><h4 class="heading-arrow">Company Info</h4></td></tr>
+                        <tr><th>Email Address:</th><td><a href="mailto:@Model.EmailAddress">@Model.EmailAddress</a></td></tr>
+                        <tr><th>Department:</th><td>@Model.Department</td></tr>
+                        <tr><th>Job Title:</th><td>@Model.JobTitle</td></tr>
+                        <tr><th>HireDate:</th><td>@(Model.HireDate.HasValue ? Model.HireDate.Value.ToShortDateString() : String.Empty)</td></tr>
+                        <tr><th>User Name:</th><td>@Model.UserName</td></tr>
+                        <tr><th>Extension:</th><td>@Model.Extension</td></tr>
+                        <tr><th>IM Name:</th><td>@Model.ImName</td></tr>
+                        <tr><td colspan="2"><br /><h4 class="heading-arrow">Emergency Info</h4></td></tr>
+                        <tr><th>Contact Name:</th><td>@Model.EmergencyContactName</td></tr>
+                        <tr><th>Contact Number:</th><td>@Model.EmergencyContactNumber</td></tr>
+                    </table>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+        </div>
+        @if (Model.UserName == BisAdmin.SiteUtilities.UserSession.GetCurrentUser().UserName || BisAdmin.SiteUtilities.UserSession.IsUserAdmin())
+        {
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h4><i class="fa fa-user"></i> Upload Avatar Image</h4></div>
+                    <div class="panel-body">
+                        <div style="font-weight: bold;">JPGs Only! All images will be resized to a max size of 200px by 200px.</div>
+                        @(Html.Kendo().Upload()
+                              .Name("files")
+                              .Async(a => a
+                                              .Save("UploadAvatarImage", "File")
+                                              .AutoUpload(true)
+                              )
+                              .Events(e => e.Complete("onComplete"))
+                        )
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h4><i class="fa fa-user"></i> Edit Profile</h4></div>
+                    @using (Html.BeginForm("Save", "Account", FormMethod.Post))
+                    {
+                        <div class="panel-body">
+
+                            @Html.HiddenFor(x => x.Id)
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">First Name:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.FirstName, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">Last Name:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.LastName, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">Birthday:</label>
+                                    <div class="col-lg-9">@(Html.Kendo().DatePickerFor(x => x.Birthday))</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">IM Name:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.ImName, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">Mobile Number:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.MobileNumber, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">Extension:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.Extension, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">Address:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.Address, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">City:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.City, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">State:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.State, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">Zip:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.Zip, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">Emergency Contact Name:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.EmergencyContactName, new {@class = "form-control"})</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label">Emergency Contact Number:</label>
+                                    <div class="col-lg-9">@Html.TextBoxFor(x => x.EmergencyContactNumber, new {@class = "form-control"})</div>
+                                </div>
+                                @if (BisAdmin.SiteUtilities.UserSession.IsUserAdmin())
+                                {
+                                    <h3 class="text-danger">Admin Section</h3>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Department:</label>
+                                        <div class="col-lg-9">@Html.TextBoxFor(x => x.Department, new { @class = "form-control" })</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Job Title:</label>
+                                        <div class="col-lg-9">@Html.TextBoxFor(x => x.JobTitle, new { @class = "form-control" })</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Hire Date:</label>
+                                        <div class="col-lg-9">@(Html.Kendo().DatePickerFor(x => x.HireDate))</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Is Admin:</label>
+                                        <div class="col-lg-9">@Html.CheckBoxFor(x => x.IsAdmin, new { @class = "form-control" })</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <input type="submit" class="btn btn-success pull-right" value="Save" />
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    function onComplete(e) {
+        document.location = document.location;
+    }
+</script>

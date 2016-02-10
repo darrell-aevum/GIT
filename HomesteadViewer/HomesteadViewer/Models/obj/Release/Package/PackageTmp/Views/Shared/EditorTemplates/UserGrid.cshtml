@@ -1,0 +1,46 @@
+﻿@using Kendo.Mvc.UI
+@(Html.Kendo().Grid<HomesteadViewer.Models.User>()
+                .Name("users-grid")
+                .HtmlAttributes(new { @class = "table-responsive employees-row-link" })
+                .Columns(columns =>
+                {
+                    columns.Bound(p => p.UserName).Title("Login").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                    columns.Bound(p => p.FirstName).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                    columns.Bound(p => p.LastName).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                    columns.Bound(p => p.MobileNumber).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                    columns.Bound(p => p.EmailAddress).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                    columns.Bound(p => p.IsAdmin);
+                    columns.Command(command => { command.Edit(); command.Destroy(); }).HtmlAttributes(new { style = "text-align: center; white-space:nowrap;" });
+                })
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Read(read => read.Action("User_List", "Administration"))
+                    .Sort(x => x.Add(d => d.LastName))
+                    .Model(x => x.Id("Id"))
+                    .Create(update => update.Action("User_Create", "Administration"))
+                    .Update(update => update.Action("User_Update", "Administration"))
+                    .Destroy(update => update.Action("User_Delete", "Administration"))
+                )
+                .ToolBar(toolBar =>
+                {
+                    toolBar.Create().Text("Add New User").HtmlAttributes(new { style = "float: right;" });
+                })
+                .Editable(editable => editable.Mode(GridEditMode.InLine))
+                .Selectable()
+                .Filterable(x => x.Mode(GridFilterMode.Row))
+)
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>

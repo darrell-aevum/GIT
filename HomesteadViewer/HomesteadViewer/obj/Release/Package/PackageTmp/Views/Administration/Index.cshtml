@@ -1,0 +1,30 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Settings";
+}
+<div id="page-heading">
+    <h1>Application Settings</h1>
+</div>
+<div class="container">
+    @(Html.Kendo().TabStrip()
+        .Name("settings-tabs")
+        .HtmlAttributes(new { @class = "page-tabs" })
+        .Items(t =>
+        {
+            t.Add().Text("Application Settings").Selected(true).LoadContentFrom("ApplicationSettings", "Administration");             
+            t.Add().Text("Grid Settings").LoadContentFrom("GridSettings", "Administration");
+            t.Add().Text("Users").LoadContentFrom("Users", "Administration");
+            t.Add().Text("Orphaned Data").LoadContentFrom("OrphanedData", "Administration"); 
+            t.Add().Text("Error Logs").LoadContentFrom("ErrorLogs", "Administration"); 
+        })
+    )
+</div>
+<div id="dialog" style="display: none;"></div>

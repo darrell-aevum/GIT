@@ -1,0 +1,366 @@
+﻿@using HomesteadViewer.DAL;
+@using HomesteadViewer.SiteUtilities;
+@{
+    var user = UserSession.GetCurrentUser();
+    if (string.IsNullOrEmpty(user.UserName))
+    {
+        Response.Redirect(Url.RouteUrl(new { controller = "Account", action = "Logout", area = String.Empty }));
+        return;
+    }
+
+    var allExemptionsCount = DataHelper.GetAllExemptions().Count();
+    var assignedExemptionsCount = DataHelper.GetAssignedExemptions().Count();
+    var unAssignedExemptionsCount =  DataHelper.GetUnassignedExemptions().Count();
+    var assignedToMeCount = user.AssignedExemptions.Count();
+ }
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homestead Viewer</title>
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="shortcut icon" href="/Content/img/favicon.ico">
+    <link rel="apple-touch-icon" href="/Content/img/app-icon.png">
+    <link rel="icon" href="/Content/img/app-icon.png">
+    <meta name="application-name" content="Homestead Viewer" />
+    <meta name="msapplication-TileColor" content="#134E88" />
+    <meta name="msapplication-square150x150logo" content="/Content/img/app-icon.png" />
+
+    <link rel="stylesheet" href="/content/theme/styles.css">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+    @Styles.Render("~/Content/kendo/css")
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    @Scripts.Render("~/Scripts/js")
+</head>
+<body>
+    <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+        <a id="leftmenu-trigger" class="tooltips" data-toggle="tooltip" data-placement="right" title="Toggle Sidebar"></a>
+        <div class="navbar-header pull-left">
+            <a class="navbar-brand" href="\">Homestead Viewer</a>
+        </div>
+        <ul class="nav navbar-nav pull-right toolbar">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle username" data-toggle="dropdown"><span class="hidden-xs">@user.FullName <i class="fa fa-caret-down"></i></span><img src="@Url.RouteUrl(new { controller = "File", action = "AvatarImage", id = user.UserName, area = String.Empty })" alt="Dangerfield" /></a>
+                <ul class="dropdown-menu userinfo arrow">
+                    <li class="username">
+                        <a href="#">
+                            <div class="pull-left"><img class="userimg" src="@Url.RouteUrl(new { controller = "File", action = "AvatarImage", id = user.UserName, area = String.Empty })" alt="@user.FullName" /></div>
+                            <div class="pull-right"><h5>Howdy, @user.FirstName!</h5><small>Logged in as <span>@user.UserName</span></small></div>
+                        </a>
+                    </li>
+                    <li class="userlinks">
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.RouteUrl(new { controller = "Account", action = "Profile", area = String.Empty })">Edit Profile <i class="pull-right fa fa-pencil"></i></a></li>
+                            <li><a href="@Url.RouteUrl(new { controller = "Account", action = "Profile", area = String.Empty })">Account <i class="pull-right fa fa-cog"></i></a></li>
+                            <li><a href="#">Help <i class="pull-right fa fa-question-circle"></i></a></li>
+                            <li class="divider"></li>
+                            <li><a href="@Url.RouteUrl(new { controller = "Account", action = "Logout", area = String.Empty })" class="text-right">Sign Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            @*<li><a href="@Url.RouteUrl(new { area = "Tickets", controller = "Save", action = "New" })" data-toggle="modal" data-target="#main-modal"><i class="fa fa-plus"></i> New Ticket</a></li>*@
+        </ul>
+    </header>
+    <div id="page-container">
+        <!-- BEGIN SIDEBAR -->
+        <nav id="page-leftbar" role="navigation" style="position: fixed; top: 40px; z-index: 1029;">
+            <!-- BEGIN SIDEBAR MENU -->
+            <ul class="acc-menu" id="sidebar">
+                @*<li id="search">
+        <a href="javascript:;"><i class="fa fa-search opacity-control"></i></a>
+        <form style="width: 220px;">
+           @(Html.Kendo().AutoComplete()
+                      .Name("contactSearch")
+                      .DataTextField("ContactName")
+                      .Filter(FilterType.Contains)
+                      .MinLength(2).Placeholder("Search...")
+                      .HtmlAttributes(new { @class = "search-query" })
+                              .DataSource(source => source.Read(read => read.Action("GetAutoCompleteList", "Business", new { area = String.Empty })))
+                      .Events(e => e
+                          .Select(@<text>
+                            function(e) {
+                            var dataItem = this.dataItem(e.item.index());
+                            document.location = dataItem.ContactBaseUrl + dataItem.ContactId;
+                            }
+                        </text>))
+            )
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </li>
+    <li class="divider"></li>*@
+                <li><a href="javascript:;"><i class="fa fa-random"></i><span>Exemptions:</span></a>
+                    <ul class="acc-menu">
+                        <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", assignedTo = user.Id })"><i class="fa fa-inbox"></i><span>Assigned To Me</span><span class="badge badge-primary">@assignedToMeCount</span></a></li>
+                        <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", assignedTo = "assigned" })"><i class="fa fa-inbox"></i><span>Assigned</span><span class="badge badge-primary">@assignedExemptionsCount</span></a></li>
+                        <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", assignedTo = "unassigned" })"><i class="fa fa-inbox"></i><span>Unassigned</span><span class="badge badge-primary">@unAssignedExemptionsCount</span></a></li>
+                        <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", assignedTo = "all" })"><i class="fa fa-inbox"></i><span>All</span><span class="badge badge-primary">@allExemptionsCount</span></a></li>
+                        <li>
+                            <a href="javascript:;"><i class="fa fa-random"></i><span>Assigned To Others:</span></a>
+                            <ul class="acc-menu">
+                                @foreach (var u in HomesteadViewer.DAL.DataHelper.GetAllUsers().Where(u => u.Id != user.Id))
+                                {
+                                    var assignedCount = u.AssignedExemptions.Count();
+                                    if(assignedCount <= 0)
+                                    {
+                                        continue;
+                                    }                                    
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", assignedTo=u.Id })">@u.FullName<span class="badge badge-primary">@assignedCount</span></a></li>
+                                }
+                            </ul>
+                        </li>
+                    </ul></li>
+                @{if (user.IsAdmin)
+                {
+                    @Html.Partial("EditorTemplates/Left-Menu")
+                }
+                }
+                
+
+            </ul>
+            <!-- END SIDEBAR MENU -->
+        </nav>
+        <div id="page-content">
+            <div id='wrap'>
+                @RenderBody()
+                <div class="modal fade" id="main-modal" tabindex="-1" role="dialog"></div>
+            </div> <!--wrap -->
+        </div> <!-- page-content -->
+        <footer role="contentinfo">
+            <div class="clearfix">
+                <ul class="list-unstyled list-inline">
+                    <li>BIS Consulting &copy; @DateTime.Now.Year</li>
+                    <button class="pull-right btn btn-inverse-alt btn-xs hidden-print" id="back-to-top"><i class="fa fa-arrow-up"></i></button>
+                </ul>
+            </div>
+        </footer>
+    </div>
+    <div id="window"></div>
+</body>
+</html>
+
+
+
+
+@*<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/bundles/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <!--[if lt IE 10]>
+        @Scripts.Render("~/bundles/avenger-IE10-script")
+    <![endif]-->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries. Placeholdr.js enables the placeholder attribute -->
+    <!--[if lt IE 9]>
+        @Scripts.Render("~/bundles/avenger-IE9-style")
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+        @Scripts.Render("~/bundles/avenger-IE9-script")
+        <script type="text/javascript" src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    @Styles.Render("~/bundles/avenger-assets/css")
+    @Styles.Render("~/bundles/avenger-plugins/css")
+
+    <!-- Load site level scripts -->
+    @Scripts.Render("~/bundles/avenger-scripts")
+    @Scripts.Render("~/bundles/avenger-plugins")
+    <!-- End loading page level scripts-->
+    <script>
+        var userJSON = "@Helper.SerializeObject(Helper.GetLoggedInUser())".replace(/&quot;/g, '\"');
+        var user = $.parseJSON(userJSON);
+        $(function () {
+            $("#loggedInUser").text(user.Name);
+            if (!user.IsAdmin)
+                $(".adminOnly").hide();
+        });
+
+    </script>
+</head>
+<body class="infobar-offcanvas">
+    <div id="headerbar">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-6 col-sm-2">
+                    <a href="#" class="shortcut-tile tile-brown">
+                        <div class="tile-body">
+                            <div class="pull-left"><i class="fa fa-pencil"></i></div>
+                        </div>
+                        <div class="tile-footer">
+                            Create Post
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <a href="#" class="shortcut-tile tile-grape">
+                        <div class="tile-body">
+                            <div class="pull-left"><i class="fa fa-group"></i></div>
+                            <div class="pull-right"><span class="badge">2</span></div>
+                        </div>
+                        <div class="tile-footer">
+                            Contacts
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <a href="#" class="shortcut-tile tile-primary">
+                        <div class="tile-body">
+                            <div class="pull-left"><i class="fa fa-envelope-o"></i></div>
+                            <div class="pull-right"><span class="badge">10</span></div>
+                        </div>
+                        <div class="tile-footer">
+                            Messages
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <a href="#" class="shortcut-tile tile-inverse">
+                        <div class="tile-body">
+                            <div class="pull-left"><i class="fa fa-camera"></i></div>
+                            <div class="pull-right"><span class="badge">3</span></div>
+                        </div>
+                        <div class="tile-footer">
+                            Gallery
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xs-6 col-sm-2">
+                    <a href="#" class="shortcut-tile tile-midnightblue">
+                        <div class="tile-body">
+                            <div class="pull-left"><i class="fa fa-cog"></i></div>
+                        </div>
+                        <div class="tile-footer">
+                            Settings
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <a href="#" class="shortcut-tile tile-orange">
+                        <div class="tile-body">
+                            <div class="pull-left"><i class="fa fa-wrench"></i></div>
+                        </div>
+                        <div class="tile-footer">
+                            Plugins
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <header id="topnav" class="navbar navbar-midnightblue navbar-fixed-top clearfix" role="banner">
+
+        <span id="trigger-sidebar" class="toolbar-trigger toolbar-icon-bg">
+            <a data-toggle="tooltips" data-placement="right" title="Toggle Sidebar"><span class="icon-bg"><i class="fa fa-fw fa-bars"></i></span></a>
+        </span>
+
+        <a class="navbar-brand" href="index.html">Homestead Viewer</a>
+
+        <div class="yamm navbar-left navbar-collapse collapse in">
+            <ul class="nav navbar-nav"></ul>
+        </div>
+
+        <ul class="nav navbar-nav toolbar pull-right"></ul>
+
+    </header>
+
+    <div id="wrapper">
+        <div id="layout-static">
+            <div class="static-sidebar-wrapper sidebar-midnightblue">
+                <div class="static-sidebar">
+                    <div class="sidebar">
+                        <div class="widget stay-on-collapse" id="widget-welcomebox">
+                            <div class="widget-body welcome-box tabular">
+                                <div class="tabular-row">
+                                    <div class="tabular-cell welcome-avatar">
+                                        <a href="#"><img src="http://placehold.it/300&text=Placeholder" class="avatar"></a>
+                                    </div>
+                                    <div class="tabular-cell welcome-options">
+                                        <span class="welcome-text">Logged In As:</span>
+                                        <a href="#" class="name" id="loggedInUser"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widget stay-on-collapse" id="widget-sidebar">
+                            <nav role="navigation" class="widget-body">
+                                <ul class="acc-menu">
+                                    <li class="nav-separator">Explore</li>
+                                    <li><a href="/"><i class="fa fa-home"></i><span>Home</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", assignedTo=Helper.GetLoggedInUser().Login })"><i class="fa fa-inbox"></i><span>Assigned To Me</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions" })"><i class="fa fa-inbox"></i><span>All Exemptions</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", assignedTo="unassigned" })"><i class="fa fa-inbox"></i><span>Unassigned Exemptions</span></a></li>
+                                    <li>
+                                        <a href="javascript:;"><i class="fa fa-random"></i><span>Assigned To Others:</span></a>
+                                        <ul class="acc-menu">
+                                            @foreach (var user in HomesteadViewer.DAL.DataHelper.GetAllUsers())
+                                            {
+                                                if (user.Login == Helper.GetLoggedInUser().Login)
+                                                {
+                                                    continue;
+                                                }
+                                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", assignedTo=user.Login })">@user.Name</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                    <li class="nav-separator adminOnly">Administration</li>
+                                    <li class="adminOnly"><a href="@Url.RouteUrl(new { action = "Users", controller = "Administration" })"><i class="fa fa-inbox"></i><span>Users</span><span class="badge badge-primary">3</span></a></li>
+                                    <li class="adminOnly">
+                                        <a href="javascript:;"><i class="fa fa-cog"></i><span>Settings</span></a>
+                                        <ul class="acc-menu">
+                                            <!-- <li><a href="app-blog-dashboard.html">Dashboard</a></li> -->
+                                            <li><a href="app-blog-page-list.html">Page List</a></li>
+                                            <li><a href="app-blog-edit.html">Page Edit</a></li>
+                                            <li><a href="app-blog-comment.html">Comment Moderation</a></li>
+                                            <li>
+                                                <a href="javascript:;">Blog Front</a>
+                                                <ul class="acc-menu">
+                                                    <li><a href="app-blogfront-list.html">Blog Page</a></li>
+                                                    <li><a href="app-blogfront-page.html">Blog Post</a></li>
+                                                    <li><a href="app-blogfront-column.html">Blog Column</a></li>
+                                                    <li><a href="app-blogfront-portfolio.html">Porfolio</a></li>
+                                                </ul>
+                                            </li>
+
+
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="static-content-wrapper">
+                <div class="static-content">
+                    @RenderBody()
+                </div>
+                <footer role="contentinfo">
+                    <div class="clearfix">
+                        <ul class="list-unstyled list-inline pull-left">
+                            <li><h6 style="margin: 0;"> &copy; 2015 BIS</h6></li>
+                        </ul>
+                        <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top"><i class="fa fa-arrow-up"></i></button>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+    @RenderSection("scripts", required: false)
+
+
+</body>
+</html>*@
+
+
+
+

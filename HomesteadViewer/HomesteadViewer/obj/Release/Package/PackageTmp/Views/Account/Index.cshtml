@@ -1,0 +1,86 @@
+﻿@model HomesteadViewer.ViewModels.AccountModels.LoginModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>@HomesteadViewer.AppSettings.SiteTitle</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/content/theme/styles.css">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+    <link href="~/Content/kendo/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/kendo.common-bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/kendo.metro.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/kendo.dataviz.metro.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/kendo.metro.mobile.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/enquire.js"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/jquery.nicescroll.min.js"></script>
+    <script src="~/Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo.aspnetmvc.js"></script>
+    <script src="~/Scripts/application.js"></script>
+    <script src="~/Scripts/ZeroClipboard.min.js"></script>
+    <script src="~/Scripts/Site.js"></script>
+</head>
+<body class="focusedform">
+
+    <div class="verticalcenter">        
+        <div class="panel panel-primary">            
+                @using (Html.BeginForm("Index", "Account", FormMethod.Post, new {@class = "form-signin"}))
+                {
+                    <div class="panel-body">
+                        <a href="/"><img src="/content/img/logo-big.png" alt="Logo" class="brand" width="100%"/></a>
+                        <h4 class="text-center" style="margin-bottom: 25px;">Log in to get started.</h4>
+                        <div class="form-horizontal" style="margin-bottom: 0px !important;">
+                            @if (Model.IsNewInstall) { 
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-globe"></i></span>
+                                    @Html.TextBoxFor(x => x.FullyQualifiedDomain, new { @class = "form-control", placeholder = "Fully Qualified Domain Name" })
+                                </div>
+                            </div>                                
+                            }
+                            <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                        @Html.TextBoxFor(x => x.UserName, new {@class = "form-control", placeholder = "Username"})
+                                    </div>
+                            </div>
+                            <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                        @Html.PasswordFor(x => x.Password, new {@class = "form-control", placeholder = "Password"})
+                                    </div>
+                            </div>
+                        </div>
+                        @Html.HiddenFor(x=>x.IsNewInstall)
+                        @if (!String.IsNullOrEmpty(ViewBag.Error))
+                        {
+                        <div style="color: red; float: right;">@ViewBag.Error</div>
+                        }
+                    </div>
+
+                    <div class="panel-footer">
+                        <div class="pull-right">
+                            <input type="submit" value="Log In" class="btn btn-primary" />
+                        </div>
+                    </div>
+                }
+                
+            
+        </div>
+    </div>
+
+</body>
+</html>
+

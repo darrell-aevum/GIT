@@ -1,0 +1,131 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Exemptions";
+}
+ 
+<script type="text/kendo" id="usersTemplate">
+    <div class="row"> 
+        #if(!data){#
+            <div class="col-sm-12" style="padding-bottom:2px;margin:4px;"><span class="label-inverse" style="color:white; padding:5px;">Not Assigned</span></div>            
+        #return "Not Assigned";}#
+        #for(var i = 0; i< data.length; i++){#     
+            <div class="col-sm-12" style="padding-bottom:2px;margin:4px;"><span class="label-inverse" style="color:white; padding:5px;">#:(!data[i].FullName || data[i].FullName == "") ? "Not Assigned" : data[i].FullName#</span></div>
+        #}#
+    </div>
+</script>
+ 
+
+<script type="text/javascript">
+    var usersTemplate = kendo.template($("#usersTemplate").html(), { useWithBlock: false });
+</script>
+ 
+    <br />
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h4 class="heading glyphicons beer"><i></i>Exemptions</h4></div>
+        <div class="panel-body">
+            @(Html.Kendo().Grid<HomesteadViewer.Models.Exemption>()
+                .Name("exemption-grid")
+                .HtmlAttributes(new { @class = "table-responsive" })
+                .Columns(columns =>
+                {
+                    columns.Command(command => command.Custom("View").Click("showDetails"));
+                    columns.Bound(p => p.QuickRefID).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                    columns.Bound(p => p.DeedDate).Format("{0:MM/dd/yyyy}").Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                    columns.Bound(p => p.SellerName).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                    columns.Bound(p => p.PartyName).Filterable(ftb => ftb.Cell(cell => cell.Operator("contains")));
+                    columns.Bound(e => e.Status).ClientTemplate(
+                        "<div class='row'><div class='col-sm-12' style='padding-bottom:2px;margin:4px;'>" +
+                        "# if (Status == 0) { #" +
+                            "<span class='label-green' style='color:white; padding:5px;'>Approved</span>" +
+                        "# } else  if (Status == 1){ #" +
+                            "<span class='label-primary' style='color:white; padding:5px;'>Pending</span>" +
+                        "# } else { #" +
+                            "<span class='label-default' style='color:white; padding:5px;'>Not Worked</span>" +
+                        "# } #" +
+                        "</div></div>"
+                    ); 
+                    columns.Bound(e => e.AssignedUsers).EditorTemplateName("AssignedUsers").ClientTemplate("#=usersTemplate(AssignedUsers)#");
+                    columns.Command(command => { command.Edit().UpdateText("Save").Text("Assign"); }).HtmlAttributes(new { style = "text-align: center; white-space:nowrap;" });
+                })
+                                                .DataSource(dataSource => dataSource
+                                                    .Ajax()
+                                                    .Events(events => events.Error("error_handler"))
+                                                    .Model(model =>
+                                                    {
+                                                        model.Id(p => p.ID);
+                                                        model.Field(p => p.ID).DefaultValue(16000000);
+                                                        model.Field(p => p.QuickRefID).Editable(false);
+                                                        model.Field(p => p.DeedDate).Editable(false);
+                                                        model.Field(p => p.SellerName).Editable(false);
+                                                        model.Field(p => p.PartyName).Editable(false);
+                                                        model.Field(p => p.Status).Editable(false);
+                                                        model.Field(e => e.AssignedUsers).Editable(true).DefaultValue(new List<HomesteadViewer.Models.User>());
+                                                    })
+                                                    .Read(read => read.Action("Exemption_List", "Exemptions", new { assignedTo = ViewBag.AssignedTo }))
+                                                    .Update(update => update.Action("Assign_Exemption", "Exemptions").Data("serialize"))
+                                                    .Sort(x => x.Add(d => d.DeedDate))
+                                                    .Model(x => x.Id("Id"))
+                                                )
+                    // .Events(events => { events.Save("exemption_grid_Save"); })
+                                                .Selectable()
+                                                .Sortable()
+                                                .Editable(editable => editable.Mode(GridEditMode.InLine))
+                                                .Filterable(x => x.Mode(GridFilterMode.Row))
+            )
+
+
+        </div>
+    </div>
+    </div>
+ 
+@Html.Partial("EditorTemplates/Viewer")
+ 
+
+       
+
+<script type="text/javascript"> 
+
+
+    function serialize(data) { 
+        for (var property in data) {
+            if ($.isArray(data[property])) {
+                serializeArray(property, data[property], data);
+            }
+        }
+    }
+
+    function serializeArray(prefix, array, result) {        
+        for (var i = 0; i < array.length; i++) {
+            if ($.isPlainObject(array[i])) {
+                for (var property in array[i]) {
+                    result[prefix + "[" + i + "]." + property] = array[i][property];
+                }
+            }
+            else {
+                result[prefix + "[" + i + "]"] = array[i];
+            }
+        }
+    }
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>

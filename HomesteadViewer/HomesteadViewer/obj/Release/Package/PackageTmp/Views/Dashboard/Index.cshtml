@@ -1,0 +1,88 @@
+﻿@using Kendo.Mvc.UI
+@using Humanizer
+@using HomesteadViewer.ViewModels
+@using HomesteadViewer.Lists
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model HomesteadViewer.ViewModels.DashboardViewModel
+<div id="page-heading">
+    <h1>Dashboard</h1>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <h4 style="margin: 0 0 10px;">Exemptions Approved by Users</h4>
+                    @(Html.Kendo().Chart(DashboardViewModel.ApprovedByUsers().OrderByDescending(x => x.Total).ToList())
+                          .Name("ApprovedByUsers")
+                          .Theme("Bootstrap").HtmlAttributes(new { style = "max-height: 500;" })
+                          .Legend(l => l.Visible(false))
+                                  .Series(s => s.Bar(p => p.Total).Labels(l => l.Visible(true)).Color("#5cb85c"))
+                          .CategoryAxis(a => a.Categories(c => c.Id)))
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-body" style="padding: 10px 20px;">
+                    <h4 style="margin: 0;"><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", filter = "pending" })">Pending </a> <small style="float:right;">(Oldest 10 of @HomesteadViewer.ViewModels.Exemption.GetCountFor(HomesteadViewer.Lists.ExemptionStatus.Pending))</small></h4>
+                </div>
+                <div class="list-group">
+                    @foreach (var item in DashboardViewModel.PendingExemptions().Take(10))
+                    {
+                        <a class="list-group-item" href="/Exemptions?filter=@item.Title">
+                            <span class="badge badge-primary">@item.Date.Humanize(false)</span>
+                            @item.Title
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <h4 style="margin: 0 0 10px;">Exemptions By Status</h4>
+                        @(Html.Kendo().Chart(DashboardViewModel.ExemptionsByStatus().OrderBy(x => x.Total).ToList())
+                          .Name("ExemptionsByStatus")
+                          .Theme("Bootstrap").HtmlAttributes(new { style = "height: 250px;" })
+                          .Legend(l => l.Visible(false))
+                          .Series(s => s.Column(p => p.Total).Labels(l => l.Visible(true)))
+                          .CategoryAxis(a => a.Categories(c => c.Id)))
+                    </div>
+                </div>
+            </div>
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <h4 style="margin: 0 0 10px;">Exemptions By Date <small style="float:right;">(Last 15 Days)</small></h4>
+                    @(Html.Kendo().Chart()
+                          .Name("CreatedByDate")
+                          .Theme("Bootstrap").HtmlAttributes(new { style = "height: 250px;" })
+                          .SeriesDefaults(d => d.Line().Style(ChartLineStyle.Smooth))
+                          .Legend(l => l.Visible(true).Position(ChartLegendPosition.Left))
+                          .Series(s =>
+                          {
+                              s.Line(DashboardViewModel.CreatedByDate(x => x.Created.Date > DateTime.Now.AddDays(-15))).Name("Created").Field("Total").CategoryField("Id").Color("#cccccc");
+                              s.Line(DashboardViewModel.ChartDateStat(ExemptionStatus.Pending ,-15)).Name("Pending").Field("Total").CategoryField("Id").Color("#d9534f");
+                              s.Line(DashboardViewModel.ChartDateStat(ExemptionStatus.Approved, -15)).Name("Approved").Field("Total").CategoryField("Id").Color("#5cb85c");
+                              s.Line(DashboardViewModel.AssignedByDate(-15)).Name("Assigned").Field("Total").CategoryField("Id").Color("rgb(66, 139, 202)");
+                          })
+                          .CategoryAxis(a => a.Date().BaseUnit(ChartAxisBaseUnit.Days))
+                          .Tooltip(t => t.Visible(true).Format("Total: {0}")))
+                </div>
+            </div>
+    </div> 
+    </div>
+
+</div>
+<script>
+    $(window).on("resize", function () {
+        kendo.resize($(".panel-body"));
+    });
+</script>

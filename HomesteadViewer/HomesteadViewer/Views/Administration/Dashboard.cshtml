@@ -1,0 +1,51 @@
+﻿@using Kendo.Mvc.UI
+@using Humanizer
+@using HomesteadViewer.ViewModels.Administration
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+} 
+<div id="page-heading">
+    <h1>Dashboard</h1>
+</div>
+<div class="container">
+    <div class="row"> 
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <h4 style="margin: 0 0 10px;">User Activity - Total Time Logged In <small>(Last 7 Days)</small></h4>
+                    @(Html.Kendo().Chart()
+                          .Name("UserActivity30")
+                          .Theme("Bootstrap").HtmlAttributes(new { style = "height: 250px;" })
+                                  .SeriesDefaults(d => d.Line().Style(ChartLineStyle.Normal))
+                          .Legend(l => l.Visible(true).Position(ChartLegendPosition.Left))
+                          .Series(s =>
+                          {
+                              int i = 101010;
+                              foreach (var user in DashboardViewModel.UserActivity(x=>x.FirstLogDate.Date  > DateTime.Now.AddDays(-7)).GroupBy(x=>x.Id))
+                              {
+                                  var rand = new Random(i);
+                                  var color = String.Format("#{0:X6}", rand.Next(0x1000000));
+                                  s.Column(user)
+                                      .Name(user.First().Id)
+                                      .Field("Total")
+                                      .CategoryField("date")
+                                      .Color(color)
+                                      .Tooltip(t => t.Visible(true)
+                                          .Template("#=dataItem.Id + ' - ' + dataItem.Humanized#"));
+                                  i+=100;
+                              }
+                          })
+                          .CategoryAxis(a => a.Date().BaseUnit(ChartAxisBaseUnit.Days))                            
+                    )
+                </div>
+            </div>
+        </div>
+    </div>     
+</div>
+<script>
+    $(window).on("resize", function () {
+        kendo.resize($(".panel-body"));
+    });
+</script>

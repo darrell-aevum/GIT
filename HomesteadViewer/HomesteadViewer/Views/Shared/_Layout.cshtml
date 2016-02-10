@@ -1,0 +1,220 @@
+﻿@using HomesteadViewer.SiteUtilities;
+@using HomesteadViewer.Models;
+@using HomesteadViewer.ViewModels;
+@using Kendo.Mvc.UI
+@{
+    var user = UserSession.GetCurrentUser();
+    UserSession.LogSessionTime();
+    if (string.IsNullOrEmpty(user.UserName))
+    {
+        Response.Redirect(Url.RouteUrl(new { controller = "Account", action = "Logout", area = String.Empty }));
+        return;
+    }
+
+    var assignedExemptionsCount = AdministrativeProperties_DTO.Count(x => x.AssignedUserID != null && x.Status != HomesteadViewer.Lists.ExemptionStatus.Approved);
+    var unAssignedExemptionsCount = Exemption.GetCountOfUnassigned(); 
+    var assignedToMeCount = user.AssignedExemptions.Count(x=>x.Status != HomesteadViewer.Lists.ExemptionStatus.Approved);
+ }
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@HomesteadViewer.AppSettings.SiteTitle</title>
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+    <meta name="msapplication-TileColor" content="#ffffff" />
+
+    <meta name="application-name" content="@HomesteadViewer.AppSettings.SiteTitle" />
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/Content/img/icon/apple-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/Content/img/icon/apple-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/Content/img/icon/apple-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/Content/img/icon/apple-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/Content/img/icon/apple-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/Content/img/icon/apple-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/Content/img/icon/apple-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/Content/img/icon/apple-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/Content/img/icon/apple-icon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/Content/img/icon/android-icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/Content/img/icon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/Content/img/icon/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/Content/img/icon/favicon-16x16.png" />
+    <link rel="manifest" href="/Content/img/icon/manifest.json" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="/Content/img/icon/ms-icon-144x144.png" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <link rel="stylesheet" href="/content/theme/styles.css">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+    @Styles.Render("~/Content/kendo/css")
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    @Scripts.Render("~/Scripts/js")
+    <script>
+        $(function () {           
+            
+        });
+    </script>
+</head>
+<body>    
+    <header class="navbar navbar-inverse navbar-fixed-top" role="banner" style="background-image: url('/content/img/logo-small.png'); background-position: left 40px center; background-repeat:no-repeat; ">
+        
+        <a id="leftmenu-trigger" class="tooltips" data-toggle="tooltip" data-placement="right" title="Toggle Sidebar"></a>
+        <div class="navbar-header pull-left" style="margin-left:110px">
+            <a class="navbar-brand" href="\">@HomesteadViewer.AppSettings.SiteTitle</a>
+        </div>        
+        <ul class="nav navbar-nav pull-right toolbar" >
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle username" data-toggle="dropdown"><span class="hidden-xs">@user.FullName <i class="fa fa-caret-down"></i></span></a>
+                <ul class="dropdown-menu userinfo arrow">
+                    <li class="username">
+                        <a href="#">                            
+                            <div class="pull-right"><h5>Howdy, @user.FirstName!</h5><small>Logged in as <span>@user.UserName</span></small></div>
+                        </a>
+                    </li>
+                    <li class="userlinks">
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.RouteUrl(new { controller = "Account", action = "Profile", userName = user.UserName })">Profile <i class="pull-right fa fa-pencil"></i></a></li>                                                        
+                            <li class="divider"></li>
+                            <li><a href="@Url.RouteUrl(new { controller = "Account", action = "Logout", area = String.Empty })" class="text-right">Sign Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            @*<li><a href="@Url.RouteUrl(new { area = "Tickets", controller = "Save", action = "New" })" data-toggle="modal" data-target="#main-modal"><i class="fa fa-plus"></i> New Ticket</a></li>*@
+        </ul>
+    </header>
+    <div id="page-container">
+        <!-- BEGIN SIDEBAR -->
+        <nav id="page-leftbar" role="navigation" style="position: fixed; top: 40px; z-index: 1029;">
+            <!-- BEGIN SIDEBAR MENU -->
+            <ul class="acc-menu" id="sidebar">
+                <li id="search">
+                    <a href="javascript:;"><i class="fa fa-search opacity-control"></i></a>
+                    <form style="width: 220px;">
+                        @(Html.Kendo().AutoComplete()                       
+                                  .Name("quickrefIDSearch")
+                                  .DataTextField("QuickrefID")
+                                  .Filter(FilterType.Contains)
+                                  .MinLength(2).Placeholder("QuickRefId Search...")
+                                  .HtmlAttributes(new { @class = "search-query" })                                  
+                                          .DataSource(source => source.Read(read => read.Action("GetAutoCompleteList", "Exemptions", new { area = String.Empty })))
+                                  .Events(e => e 
+                                      .Change(@<text>
+                                        function(e) {
+                                        var autocomplete = $("#quickrefIDSearch").data("kendoAutoComplete");
+                                        //alert(autocomplete.value());
+                                         window.location = '@Url.RouteUrl(new { action = "Index", controller = "Exemptions" })?filter=' + autocomplete.value();
+                                        }
+                                    </text>))
+                        )
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </li>
+                <li class="divider"></li>
+                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Dashboard", area = "" })"><i class="fa fa-bar-chart-o"></i><span>Dashboard</span></a></li>
+                <li class="divider"></li>
+                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", filter = user.Id })"><i class="fa fa-user"></i><span>Assigned To Me</span><span class="badge badge-primary">@assignedToMeCount</span></a></li>
+                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", filter = "assigned" })"><i class="fa fa-check-circle-o"></i><span>Assigned</span><span class="badge badge-primary">@assignedExemptionsCount</span></a></li>
+                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", filter = "unassigned" })"><i class="fa fa-circle-o"></i><span>Unassigned</span><span class="badge badge-primary">@unAssignedExemptionsCount</span></a></li>
+                <li>
+                    <a href="javascript:;"><i class="fa fa-group"></i><span>Assigned To Others:</span></a>
+                    <ul class="acc-menu">
+                        @foreach (var u in HomesteadViewer.Models.User_DTO.GetAll().Where(u => u.Id != user.Id))
+                        {
+                            var assignedCount = u.AssignedExemptions.Count(x=>x.Status != HomesteadViewer.Lists.ExemptionStatus.Approved);
+                            if (assignedCount <= 0)
+                            {
+                                continue;
+                            }
+                            <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", filter = u.Id })">@u.FullName<span class="badge badge-primary">@assignedCount</span></a></li>
+                        }
+                    </ul>
+                </li>
+                <li class="divider"></li>                
+                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", filter = "pending" })"><i class="fa fa-exclamation"></i><span>Pending</span><span class="badge badge-primary">@HomesteadViewer.ViewModels.Exemption.GetCountFor(HomesteadViewer.Lists.ExemptionStatus.Pending)</span></a></li>
+                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", filter = "notworked" })"><i class="fa fa-ban"></i><span>Not Worked</span><span class="badge badge-primary">@HomesteadViewer.ViewModels.Exemption.GetCountFor(HomesteadViewer.Lists.ExemptionStatus.NotWorked)</span></a></li>
+                <li class="divider"></li>
+                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", filter = "approved" })"><i class="fa fa-check"></i><span>Approved</span><span class="badge badge-primary">@HomesteadViewer.Models.AdministrativeProperties_DTO.Count(x=>x.Status == HomesteadViewer.Lists.ExemptionStatus.Approved)</span></a></li>
+                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Exemptions", filter = "all" })"><i class="fa fa-list-alt"></i><span>All</span><span class="badge badge-primary">@HomesteadViewer.Models.MasterExemption_DTO.Count()</span></a></li>
+                @{if (user.IsAdmin)
+                {
+                    <li class="divider"></li>
+                    <li><a href="javascript:;"><i class="fa fa-cogs"></i><span>Administration:</span></a>
+                        <ul class="acc-menu">
+                            <li><a href="@Url.RouteUrl(new { action = "Dashboard", controller = "Administration"})"><i class="fa fa-bar-chart-o"></i><span>Dashboard</span></a></li>
+                            <li><a href="@Url.RouteUrl(new { action = "ApplicationSettings", controller = "Administration"})"><i class="fa fa-cog"></i><span>Application Settings</span></a></li>
+                            <li><a href="@Url.RouteUrl(new { action = "GridSettings", controller = "Administration"})"><i class="fa fa-table"></i><span>Grid Settings</span></a></li>
+                            <li><a href="@Url.RouteUrl(new { action = "Users", controller = "Administration"})"><i class="fa fa-group"></i><span>Users</span></a></li>
+                            <li><a href="@Url.RouteUrl(new { action = "OrphanedData", controller = "Administration"})"><i class="fa fa-spinner"></i><span>Orphaned Data</span></a></li>
+                            <li><a href="@Url.RouteUrl(new { action = "ErrorLogs", controller = "Administration"})"><i class="fa fa-ban"></i><span>Error Logs</span></a></li>
+                        </ul>
+                    </li>
+                }}
+
+
+            </ul>
+
+            <!-- END SIDEBAR MENU -->
+        </nav>
+        <div id="page-content">
+            <div id='wrap'>
+                @RenderBody()
+                <div class="modal fade" id="main-modal" tabindex="-1" role="dialog"></div>
+            </div> <!--wrap -->
+        </div> <!-- page-content -->
+        <footer role="contentinfo">
+            <div class="clearfix">
+                <ul class="list-unstyled list-inline">
+                    <li>BIS Consulting &copy; @DateTime.Now.Year</li>
+                    <button class="pull-right btn btn-inverse-alt btn-xs hidden-print" id="back-to-top"><i class="fa fa-arrow-up"></i></button>
+                </ul>
+            </div>
+        </footer>
+    </div>
+    <div id="window"></div>
+
+    <script>
+        ///// ERROR PUPUP /////
+        $(function () {
+            $(document).ajaxComplete(function (event, xhr, settings) {
+
+
+                var response = eval("(" + xhr.responseText + ")") || {};
+
+                if (response && response.result) {
+                    var notification = {}
+                    notification.hidden = true;
+                    notification.type = response.result;
+
+                    if (response.result == "error") {
+                        notification.title = "Application Error";
+                        notification.text = response.message || "An Unknown Error Occurred."; 
+                    }
+                    if (response.result == "success") {
+                        notification.title = "Success!";
+                        notification.text = response.message || "The action completed successfully.";
+                    }
+                    if (response.result == "info") {
+                        notification.title = "Information Alert.";
+                        notification.text = response.message || "There should have been some info here, but something went wrong.";
+                    }
+                    if (response.result == "warning") {
+                        notification.title = "Warning.";
+                        notification.text = response.message || "Something may have gone wrong.";
+                    }
+                    $.pnotify(notification);
+                }
+
+                if (response.redirectUrl)
+                    window.location = response.redirectUrl;
+            });
+        });
+    </script>
+</body>
+</html>

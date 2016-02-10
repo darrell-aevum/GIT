@@ -1,0 +1,66 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "Grid Settings";
+}
+@model HomesteadViewer.ViewModels.Administration.GridSettingsViewModel
+
+<script type="text/javascript">
+    function sync_handler(e) {
+        this.read();
+    }
+</script>
+
+<div class="panel panel-primary">
+    <div class="container">
+        <div class="panel panel-primary">
+                <div class="panel-body">
+                @(Html.Kendo().Grid<HomesteadViewer.Models.GridColumn_DTO>()
+                    .Name("gridColumns-grid")
+                    .HtmlAttributes(new { @class = "table-responsive" })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.PropertyName);
+                        columns.Bound(p => p.DisplayName);
+                        columns.Bound(p => p.Displayed).ClientTemplate(
+                                "# if (Displayed) { #" +
+                                    "<div class='label-green' style='color:white; padding:5px; padding-left:12px;'>Yes</div>" +
+                                "# } else { #" +
+                                    "<div class='label-default' style='color:white; padding:5px; padding-left:12px;'>No</div>" +
+                                "# } #"
+                        );
+                        columns.Bound(p => p.ColumnNumber);
+                        columns.Bound(p => p.Description);                        
+                        columns.Bound(p => p.Width);
+                        
+                    })
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .Events(events => events.Sync("sync_handler"))
+                        .Model(model =>
+                        {
+                            model.Id(p => p.PropertyName);
+                            model.Field(p => p.PropertyName).Editable(false);
+                        })
+                        .Read(read => read.Action("GridColumnList_Read", "Administration"))
+                        .Update(update => update.Action("Update_GridColumns", "Administration"))
+                        .Sort(x => x.Add(d => d.ColumnNumber))
+                    )
+                    .Editable(editable => editable.Mode(GridEditMode.InCell))
+                    .Sortable()
+                    .Filterable()
+                    .ToolBar(toolbar=>toolbar.Save())
+
+)
+                </div>
+        </div>
+    </div>
+</div>
+ 

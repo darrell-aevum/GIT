@@ -1,0 +1,189 @@
+﻿@{
+    Layout = null;
+}
+ @model HomesteadViewer.ViewModels.Administration.ApplicationSettingsViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>@HomesteadViewer.AppSettings.SiteTitle</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/content/theme/styles.css">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+    <link href="~/Content/kendo/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/kendo.common-bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/kendo.metro.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/kendo.dataviz.metro.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/kendo.metro.mobile.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/enquire.js"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/jquery.nicescroll.min.js"></script>
+    <script src="~/Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo.aspnetmvc.js"></script>
+    <script src="~/Scripts/application.js"></script>    
+    <script src="~/Scripts/ZeroClipboard.min.js"></script>
+    <script src="~/Scripts/Site.js"></script>
+    <style>
+        html, body{
+            height:100%;
+            width:100%;
+        }
+        .content {
+            position: absolute;
+            left: 20%;
+            top: 6%;
+            min-width: 60%;
+            min-height: 80%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Homestead Viewer - Initial Setup</h4>
+
+            </div>
+            @*<a href="/"><img src="/content/img/logo-big.png" alt="Logo" class="brand" width="100%" /></a>*@
+            @using (Html.BeginForm("SaveApplicationSettings", "Administration", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                <div class="panel-body">                    
+                    <h2 class="text-center" style="margin-bottom: 25px;">Homestaed Viewer Setup.</h2>                   
+
+                    <div class="form-horizontal" style="margin-bottom: 0px !important;">
+                        <div class="form-group">                            
+                            <label for="focusedinput" class="col-sm-3 control-label"></label>
+                            <div class="col-sm-6">
+                                <ul>
+                                    <li>All settins can be changed later.</li>
+                                    <li>Failure to set theier values correctly will not prevent the application from running.</li>
+                                    <li>If the Data Source and Catalog are not setup properly, you will not be able to see any data.</li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-3">                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.SiteTitle)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.SiteTitle, new { @class = "form-control", placeholder = "Site Title" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label"></label>
+                            <div class="col-sm-6">
+                                <hr />
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.FullyQualifiedDomainName)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.FullyQualifiedDomainName, new { @class = "form-control", placeholder = "Domain" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.DataSource)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.DataSource, new { @class = "form-control", placeholder = "Data Source" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.Catalog)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.Catalog, new { @class = "form-control", placeholder = "Catalog" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label"></label>
+                            <div class="col-sm-6">
+                               <hr/>
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.FileRepositoryPath)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.FileRepositoryPath, new { @class = "form-control", placeholder = "File Repository Path" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.SearchTermTableColumn)</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.SearchTermTableColumn, new { @class = "form-control", placeholder = "Search Term Table Column" })
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="focusedinput" class="col-sm-3 control-label"></label>
+                            <div class="col-sm-6">
+                                <hr />
+                            </div>
+                            <div class="col-sm-3">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.AnyoneCanRegister)</label>
+                            <div class="col-sm-6">                      
+                                <div class="checkbox block"><label>@Html.CheckBoxFor(x => x.AnyoneCanRegister, new { placeholder = "Search Term Table Column" })</label></div> 
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.ApprovalForAccess)</label>
+                            <div class="col-sm-6">
+                                <div class="checkbox block"><label>@Html.CheckBoxFor(x => x.ApprovalForAccess, new { placeholder = "Search Term Table Column" })</label></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkbox" class="col-sm-3 control-label">@Html.DisplayNameFor(x => x.OnlyAdminCanAssign)</label>
+                            <div class="col-sm-6">
+                                <div class="checkbox block"><label>@Html.CheckBoxFor(x => x.OnlyAdminCanAssign, new { placeholder = "Search Term Table Column" })</label></div>
+                            </div>
+                        </div> 
+                    </div>
+                    @if (!String.IsNullOrEmpty(ViewBag.Error))
+                    {
+                        <div style="color: red; float: right;">@ViewBag.Error</div>
+                    }
+                    <a style="position:absolute; top:-20px; right:-20px; width:7%;" target="_blank" href="http://www.bisconsultants.com"><img width="100%;" src="/Content/img/app-icon.png"></a>
+                </div>
+
+                <div class="panel-footer">
+                    <div class="pull-right">
+                        <input type="submit" value="Save and Continue" class="btn btn-primary" />
+                    </div>
+                </div>
+            }
+
+
+        </div>
+    </div>
+</body>
+</html>

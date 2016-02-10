@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="HomesteadExemptionsModelStoreContainer" CdmEntityContainer="HomesteadExemptionsEntities">
+    <EntitySetMapping Name="Exemptions">
+      <EntityTypeMapping TypeName="HomesteadExemptionsModel.Exemption">
+        <MappingFragment StoreEntitySet="Exemptions">
+          <ScalarProperty Name="QuickRefID" ColumnName="QuickRefID" />
+          <ScalarProperty Name="Driver_License" ColumnName="Driver_License" />
+          <ScalarProperty Name="Birth_Date" ColumnName="Birth_Date" />
+          <ScalarProperty Name="SpouseBirthDate" ColumnName="SpouseBirthDate" />
+          <ScalarProperty Name="DateFirstOccupied" ColumnName="DateFirstOccupied" />
+          <ScalarProperty Name="OwnsProperty" ColumnName="OwnsProperty" />
+          <ScalarProperty Name="Transfer_Tax" ColumnName="Transfer_Tax" />
+          <ScalarProperty Name="DeedDate" ColumnName="DeedDate" />
+          <ScalarProperty Name="SellerName" ColumnName="SellerName" />
+          <ScalarProperty Name="ExemptionYear" ColumnName="ExemptionYear" />
+          <ScalarProperty Name="ESignature" ColumnName="ESignature" />
+          <ScalarProperty Name="OwnerName" ColumnName="OwnerName" />
+          <ScalarProperty Name="PartyName" ColumnName="PartyName" />
+          <ScalarProperty Name="HS_CODE" ColumnName="HS CODE" />
+          <ScalarProperty Name="HS_Eff_Date" ColumnName="HS Eff Date" />
+          <ScalarProperty Name="HS_ETR_YR" ColumnName="HS ETR YR" />
+          <ScalarProperty Name="OA_Code" ColumnName="OA Code" />
+          <ScalarProperty Name="OA_Eff_Date" ColumnName="OA Eff Date" />
+          <ScalarProperty Name="OA_ETR_YR" ColumnName="OA ETR YR" />
+          <ScalarProperty Name="OAS_ETR_YR" ColumnName="OAS ETR YR" />
+          <ScalarProperty Name="DP_Code" ColumnName="DP Code" />
+          <ScalarProperty Name="DP_Eff_Date" ColumnName="DP Eff Date" />
+          <ScalarProperty Name="DP_ETR_YR" ColumnName="DP ETR YR" />
+          <ScalarProperty Name="DV_Code" ColumnName="DV Code" />
+          <ScalarProperty Name="DV_Eff_Date" ColumnName="DV Eff Date" />
+          <ScalarProperty Name="DV_ETR_YR" ColumnName="DV ETR YR" />
+          <ScalarProperty Name="LegalDescription" ColumnName="LegalDescription" />
+          <ScalarProperty Name="SitusAddress" ColumnName="SitusAddress" />
+          <ScalarProperty Name="Street_chng" ColumnName="Street_chng" />
+          <ScalarProperty Name="City_chng" ColumnName="City_chng" />
+          <ScalarProperty Name="State_chng" ColumnName="State_chng" />
+          <ScalarProperty Name="Zip_chng" ColumnName="Zip_chng" />
+          <ScalarProperty Name="MailingAddress" ColumnName="MailingAddress" />
+          <ScalarProperty Name="OwnerAddress1" ColumnName="OwnerAddress1" />
+          <ScalarProperty Name="OwnerAddress2" ColumnName="OwnerAddress2" />
+          <ScalarProperty Name="OwnerCity" ColumnName="OwnerCity" />
+          <ScalarProperty Name="OwnerState" ColumnName="OwnerState" />
+          <ScalarProperty Name="OwnerZip" ColumnName="OwnerZip" />
+          <ScalarProperty Name="OwnerPhone" ColumnName="OwnerPhone" />
+          <ScalarProperty Name="OwnerEmail" ColumnName="OwnerEmail" />
+          <ScalarProperty Name="fPercentComplete" ColumnName="fPercentComplete" />
+          <ScalarProperty Name="FirstOffImproved" ColumnName="FirstOffImproved" />
+          <ScalarProperty Name="FirstOfcama_TSGLand_fHomesite" ColumnName="FirstOfcama_TSGLand_fHomesite" />
+          <ScalarProperty Name="FirstOfcama_TSGImp_fHomesite" ColumnName="FirstOfcama_TSGImp_fHomesite" />
+          <ScalarProperty Name="FollowUpDate" ColumnName="FollowUpDate" />
+          <ScalarProperty Name="Completed" ColumnName="Completed" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="Search" ColumnName="Search" />
+          <ScalarProperty Name="Assign" ColumnName="Assign" />
+          <ScalarProperty Name="Additional" ColumnName="Additional" />
+          <ScalarProperty Name="DocumentName" ColumnName="DocumentName" />
+          <ScalarProperty Name="DocumentTypeCode" ColumnName="DocumentTypeCode" />
+          <ScalarProperty Name="TimestampCreate" ColumnName="TimestampCreate" />
+          <ScalarProperty Name="Date_Added" ColumnName="Date Added" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

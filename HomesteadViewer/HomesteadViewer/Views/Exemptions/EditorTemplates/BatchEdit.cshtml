@@ -1,0 +1,138 @@
+﻿@using Kendo.Mvc.UI
+
+@( Html.Kendo().Window().Name("BatchEdit")
+        .Title("Batch Edit")
+        .Visible(false)
+        .Modal(true)
+        .Draggable(true)
+        .Draggable(true)
+        .Resizable()
+)
+
+
+
+<script type="text/x-kendo-template" id="batchTemplate">
+    <div  id="windowContent">
+        <table style="width:600px" class="viewTable">
+            <tr>
+                <td style="width:33%" valign="top" rowspan="2">
+                    <div class="panel panel-inverse" style="height:inherit"> 
+                        <div class="panel-body">
+                            <table width="100%">
+                                <tr style="border-bottom:1px solid black;">
+                                    <td><input type="checkbox" id="batch_checkAll_cb" /></td>
+                                    <th>Check/Uncheck All</th>
+                                    <td>                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="batch_exemption_assignedTo_cb" /></td>
+                                    <th>Assigned To</th>
+                                    <td>
+                                        <div class="input-group" style="width:100%;">
+                                            @(Html.Kendo().DropDownList()
+                                                    .Name("batch_exemption_assignedTo")                                                    
+                                                    .BindTo(HomesteadViewer.Helpers.DropdownListData.Users()) 
+                                                    .ToClientTemplate()
+                                            )
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="batch_exemption_status_cb" /></td>
+                                    <th>Status</th>
+                                    <td>
+                                        <div class="input-group" id="statusColumn" style="width:100%;">
+                                            @(Html.Kendo().DropDownList()
+                                                        .Name("batch_exemption_status")
+                                                        .DataTextField("Text")
+                                                        .DataValueField("Value")
+                                                        .BindTo(HomesteadViewer.Helpers.DropdownListData.Status()).ToClientTemplate()
+                                            )
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr> 
+                                    <td><input type="checkbox" id="batch_exemption_comment_cb" /></td>
+                                    <th>Comment</th>
+                                    <td>
+                                        <textarea class="k-textbox k-space-left" rows="4" style="width:100%" id="batch_exemption_comment"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="batch_exemption_followUpDate_cb" /></td>
+                                    <th>Follow Up Date</th>
+                                    <td>
+                                        <div class="demo-section k-content">
+                                            <input id="batch_exemption_followUpDate" value="" style="width: 100%" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="panel-footer" style="text-align:right">
+                            <button class="btn-midnightblue" id="batch_update">Update</button>
+                        </div>
+                    </div>
+                </td>
+            </tr> 
+        </table>
+    </div>
+</script>
+
+
+
+<script type="text/javascript">
+    var selectedData;
+
+    var batchEditTemplate = kendo.template($("#batchTemplate").html());
+
+    function showBatchEditTemplate(data) {
+        selectedData = data;
+        var wnd = $("#BatchEdit").data("kendoWindow");
+
+        wnd.content(batchEditTemplate(data));
+        wnd.center().open();
+
+        $(function () {
+            $("#batch_exemption_followUpDate").kendoDatePicker();
+            $("#batch_update").on("click", function (e) {
+                e.preventDefault(); 
+                $.each(selectedData, function (i, obj) { 
+                    data = {
+                        AssignedUserID: ($("#batch_exemption_assignedTo_cb").is(":checked")) ? $("#batch_exemption_assignedTo").data("kendoDropDownList").value() : obj.AssignedUserID,
+                        Status: ($("#batch_exemption_status_cb").is(":checked")) ? $("#batch_exemption_status").data("kendoDropDownList").value() : obj.Status,
+                        QuickrefID: obj.QuickrefID,
+                        OnlineExemptionID: obj.OnlineExemptionID,
+                        Comment: ($("#batch_exemption_comment_cb").is(":checked")) ? $("#batch_exemption_comment").val() : obj.Comment,
+                        FollowUpDate: ($("#batch_exemption_followUpDate_cb").is(":checked")) ? $("#batch_exemption_followUpDate").val() : obj.Comment,
+                    };
+                    
+                    updateDTO(data,  actionUrl = "@Url.Action("AddOrUpdateExemption", "Exemptions")", true);      
+
+                }); 
+            });
+
+            $("#batch_checkAll_cb").on("change", function () {
+                $("#batch_exemption_assignedTo_cb").prop("checked", $(this).prop("checked"));
+                $("#batch_exemption_status_cb").prop("checked", $(this).prop("checked"));
+                $("#batch_exemption_comment_cb").prop("checked", $(this).prop("checked"));
+                $("#batch_exemption_followUpDate_cb").prop("checked", $(this).prop("checked"));
+            })
+
+
+            $("#batch_exemption_assignedTo").on("change", function(){
+                $("#batch_exemption_assignedTo_cb").prop("checked", true);
+            });
+            $("#batch_exemption_status").on("change", function(){
+                $("#batch_exemption_status_cb").prop("checked", true);
+            });
+            $("#batch_exemption_comment").on("change", function(){
+                $("#batch_exemption_comment_cb").prop("checked", true);
+            });
+            $("#batch_exemption_followUpDate").on("change", function(){
+                $("#batch_exemption_followUpDate_cb").prop("checked", true);
+            }); 
+        });
+    }
+</script>

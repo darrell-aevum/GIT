@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HomesteadExemptions_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'HomesteadViewer_View.dbo.Exceptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Exceptions">
+    <Key>
+      <PropertyRef Name="QuickRefID" />
+    </Key>
+    <Property Name="QuickRefID" Type="int" Nullable="false" />
+    <Property Name="Driver_License" Type="nchar" MaxLength="10" />
+    <Property Name="Birth_Date" Type="nchar" MaxLength="10" />
+    <Property Name="SpouseBirthDate" Type="nchar" MaxLength="10" />
+    <Property Name="DateFirstOccupied" Type="nchar" MaxLength="10" />
+    <Property Name="OwnsProperty" Type="nchar" MaxLength="10" />
+    <Property Name="Transfer_Tax" Type="nchar" MaxLength="10" />
+    <Property Name="DeedDate" Type="nchar" MaxLength="10" />
+    <Property Name="SellerName" Type="nchar" MaxLength="10" />
+    <Property Name="ExemptionYear" Type="nchar" MaxLength="10" />
+    <Property Name="ESignature" Type="nchar" MaxLength="10" />
+    <Property Name="OwnerName" Type="nchar" MaxLength="10" />
+    <Property Name="PartyName" Type="nchar" MaxLength="10" />
+    <Property Name="HS CODE" Type="nchar" MaxLength="10" />
+    <Property Name="HS Eff Date" Type="nchar" MaxLength="10" />
+    <Property Name="HS ETR YR" Type="nchar" MaxLength="10" />
+    <Property Name="OA Code" Type="nchar" MaxLength="10" />
+    <Property Name="OA Eff Date" Type="nchar" MaxLength="10" />
+    <Property Name="OA ETR YR" Type="nchar" MaxLength="10" />
+    <Property Name="OAS ETR YR" Type="nchar" MaxLength="10" />
+    <Property Name="DP Code" Type="nchar" MaxLength="10" />
+    <Property Name="DP Eff Date" Type="nchar" MaxLength="10" />
+    <Property Name="DP ETR YR" Type="nchar" MaxLength="10" />
+    <Property Name="DV Code" Type="nchar" MaxLength="10" />
+    <Property Name="DV Eff Date" Type="nchar" MaxLength="10" />
+    <Property Name="DV ETR YR" Type="nchar" MaxLength="10" />
+    <Property Name="LegalDescription" Type="nchar" MaxLength="10" />
+    <Property Name="SitusAddress" Type="nchar" MaxLength="10" />
+    <Property Name="Street_chng" Type="nchar" MaxLength="10" />
+    <Property Name="City_chng" Type="nchar" MaxLength="10" />
+    <Property Name="State_chng" Type="nchar" MaxLength="10" />
+    <Property Name="Zip_chng" Type="nchar" MaxLength="10" />
+    <Property Name="MailingAddress" Type="nchar" MaxLength="10" />
+    <Property Name="OwnerAddress1" Type="nchar" MaxLength="10" />
+    <Property Name="OwnerAddress2" Type="nchar" MaxLength="10" />
+    <Property Name="OwnerCity" Type="nchar" MaxLength="10" />
+    <Property Name="OwnerState" Type="nchar" MaxLength="10" />
+    <Property Name="OwnerZip" Type="nchar" MaxLength="10" />
+    <Property Name="OwnerPhone" Type="nchar" MaxLength="10" />
+    <Property Name="OwnerEmail" Type="nchar" MaxLength="10" />
+    <Property Name="fPercentComplete" Type="nchar" MaxLength="10" />
+    <Property Name="FirstOffImproved" Type="nchar" MaxLength="10" />
+    <Property Name="FirstOfcama_TSGLand_fHomesite" Type="nchar" MaxLength="10" />
+    <Property Name="FirstOfcama_TSGImp_fHomesite" Type="nchar" MaxLength="10" />
+    <Property Name="FollowUpDate" Type="nchar" MaxLength="10" />
+    <Property Name="Completed" Type="nchar" MaxLength="10" />
+    <Property Name="Comment" Type="nchar" MaxLength="10" />
+    <Property Name="Search" Type="text" />
+    <Property Name="Assign" Type="nchar" MaxLength="10" />
+    <Property Name="Additional" Type="nchar" MaxLength="10" />
+    <Property Name="DocumentName" Type="nchar" MaxLength="10" />
+    <Property Name="DocumentTypeCode" Type="nchar" MaxLength="10" />
+    <Property Name="TimestampCreate" Type="date" />
+    <Property Name="Date Added" Type="date" />
+  </EntityType>
+  <EntityContainer Name="HomesteadExemptions_ModelStoreContainer">
+    <EntitySet Name="Exceptions" EntityType="Self.Exceptions" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Exceptions].[QuickRefID] AS [QuickRefID], 
+    [Exceptions].[Driver_License] AS [Driver_License], 
+    [Exceptions].[Birth_Date] AS [Birth_Date], 
+    [Exceptions].[SpouseBirthDate] AS [SpouseBirthDate], 
+    [Exceptions].[DateFirstOccupied] AS [DateFirstOccupied], 
+    [Exceptions].[OwnsProperty] AS [OwnsProperty], 
+    [Exceptions].[Transfer_Tax] AS [Transfer_Tax], 
+    [Exceptions].[DeedDate] AS [DeedDate], 
+    [Exceptions].[SellerName] AS [SellerName], 
+    [Exceptions].[ExemptionYear] AS [ExemptionYear], 
+    [Exceptions].[ESignature] AS [ESignature], 
+    [Exceptions].[OwnerName] AS [OwnerName], 
+    [Exceptions].[PartyName] AS [PartyName], 
+    [Exceptions].[HS CODE] AS [HS CODE], 
+    [Exceptions].[HS Eff Date] AS [HS Eff Date], 
+    [Exceptions].[HS ETR YR] AS [HS ETR YR], 
+    [Exceptions].[OA Code] AS [OA Code], 
+    [Exceptions].[OA Eff Date] AS [OA Eff Date], 
+    [Exceptions].[OA ETR YR] AS [OA ETR YR], 
+    [Exceptions].[OAS ETR YR] AS [OAS ETR YR], 
+    [Exceptions].[DP Code] AS [DP Code], 
+    [Exceptions].[DP Eff Date] AS [DP Eff Date], 
+    [Exceptions].[DP ETR YR] AS [DP ETR YR], 
+    [Exceptions].[DV Code] AS [DV Code], 
+    [Exceptions].[DV Eff Date] AS [DV Eff Date], 
+    [Exceptions].[DV ETR YR] AS [DV ETR YR], 
+    [Exceptions].[LegalDescription] AS [LegalDescription], 
+    [Exceptions].[SitusAddress] AS [SitusAddress], 
+    [Exceptions].[Street_chng] AS [Street_chng], 
+    [Exceptions].[City_chng] AS [City_chng], 
+    [Exceptions].[State_chng] AS [State_chng], 
+    [Exceptions].[Zip_chng] AS [Zip_chng], 
+    [Exceptions].[MailingAddress] AS [MailingAddress], 
+    [Exceptions].[OwnerAddress1] AS [OwnerAddress1], 
+    [Exceptions].[OwnerAddress2] AS [OwnerAddress2], 
+    [Exceptions].[OwnerCity] AS [OwnerCity], 
+    [Exceptions].[OwnerState] AS [OwnerState], 
+    [Exceptions].[OwnerZip] AS [OwnerZip], 
+    [Exceptions].[OwnerPhone] AS [OwnerPhone], 
+    [Exceptions].[OwnerEmail] AS [OwnerEmail], 
+    [Exceptions].[fPercentComplete] AS [fPercentComplete], 
+    [Exceptions].[FirstOffImproved] AS [FirstOffImproved], 
+    [Exceptions].[FirstOfcama_TSGLand_fHomesite] AS [FirstOfcama_TSGLand_fHomesite], 
+    [Exceptions].[FirstOfcama_TSGImp_fHomesite] AS [FirstOfcama_TSGImp_fHomesite], 
+    [Exceptions].[FollowUpDate] AS [FollowUpDate], 
+    [Exceptions].[Completed] AS [Completed], 
+    [Exceptions].[Comment] AS [Comment], 
+    [Exceptions].[Search] AS [Search], 
+    [Exceptions].[Assign] AS [Assign], 
+    [Exceptions].[Additional] AS [Additional], 
+    [Exceptions].[DocumentName] AS [DocumentName], 
+    [Exceptions].[DocumentTypeCode] AS [DocumentTypeCode], 
+    [Exceptions].[TimestampCreate] AS [TimestampCreate], 
+    [Exceptions].[Date Added] AS [Date Added]
+    FROM [dbo].[Exceptions] AS [Exceptions]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

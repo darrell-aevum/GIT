@@ -1,0 +1,11 @@
+﻿@using Kendo.Mvc.UI
+
+@model  ICollection<HomesteadViewer.Models.User>
+
+@(Html.Kendo().MultiSelectFor(m => m)
+    .Name("AssignedUsers")
+    .AutoClose(false)
+    .DataTextField("FullName")
+    .DataValueField("Id")
+    .Placeholder("- Assign Users -")
+        .BindTo((ICollection<HomesteadViewer.Models.User>)ViewData["users"]))

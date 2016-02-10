@@ -1,0 +1,32 @@
+﻿@using Kendo.Mvc.UI
+@{
+    if (Request.IsAjaxRequest()) //|| ViewBag.IsChildAction)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "File REPO";
+}
+<div style="margin: 20px;">
+    <table>  
+        <tr>
+            <th style="text-align: right;">Tags:</th>
+            <td>
+                @(Html.Kendo().MultiSelect()
+                                                               .Name("selectedDomains")
+                                                               .HtmlAttributes(new { style = "width: 161px;" })
+                                                               .DataTextField("TagName")
+                                                               .DataValueField("Id")
+                                                               .BindTo(BisAdmin.SiteUtilities.DropDownListData.CreateTagList("Contact"))
+                                                               .Placeholder("Select tags...")
+                                                               .Value(Model != null ? Model.Tags : new Collection<Tag>())
+                )
+            </td>
+        </tr>
+    </table><br />
+    <input type="button" class="btn" value="Cancel" onclick="CloseWindow();" />
+    <input type="submit" class="btn" value="Save" />
+</div>

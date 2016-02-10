@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HomesteadExemptionsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Exemption">
+    <Key>
+      <PropertyRef Name="QuickRefID" />
+    </Key>
+    <Property Name="QuickRefID" Type="String" Nullable="false" />
+    <Property Name="Driver_License" Type="Int32" />
+    <Property Name="Birth_Date" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="SpouseBirthDate" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DateFirstOccupied" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OwnsProperty" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Transfer_Tax" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DeedDate" Type="DateTime" />
+    <Property Name="SellerName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ExemptionYear" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="ESignature" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OwnerName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="PartyName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="HS_CODE" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="HS_Eff_Date" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="HS_ETR_YR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OA_Code" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OA_Eff_Date" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OA_ETR_YR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OAS_ETR_YR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DP_Code" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DP_Eff_Date" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DP_ETR_YR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DV_Code" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DV_Eff_Date" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DV_ETR_YR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="LegalDescription" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="SitusAddress" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Street_chng" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="City_chng" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="State_chng" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Zip_chng" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="MailingAddress" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OwnerAddress1" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OwnerAddress2" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OwnerCity" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OwnerState" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OwnerZip" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OwnerPhone" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="OwnerEmail" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="fPercentComplete" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="FirstOffImproved" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="FirstOfcama_TSGLand_fHomesite" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="FirstOfcama_TSGImp_fHomesite" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="FollowUpDate" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Completed" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Comment" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Search" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Assign" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Additional" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DocumentName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DocumentTypeCode" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="TimestampCreate" Type="DateTime" Precision="0" />
+    <Property Name="Date_Added" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityContainer Name="HomesteadExemptionsEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Exemptions" EntityType="Self.Exemption" />
+  </EntityContainer>
+</Schema>
